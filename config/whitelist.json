@@ -1,0 +1,34 @@
+{
+  "commands": [
+    "df",
+    "free",
+    "ps",
+    "top",
+    "htop",
+    "uptime",
+    "systemctl status",
+    "systemctl list-units",
+    "journalctl",
+    "cat",
+    "tail",
+    "head",
+    "grep",
+    "ls",
+    "pwd",
+    "whoami",
+    "date",
+    "uname"
+  ],
+  "patterns": [
+    "^df\\s+",
+    "^free\\s+",
+    "^ps\\s+",
+    "^systemctl\\s+status\\s+",
+    "^systemctl\\s+list-units",
+    "^journalctl\\s+",
+    "^cat\\s+/var/log/",
+    "^tail\\s+",
+    "^grep\\s+"
+  ]
+}
+

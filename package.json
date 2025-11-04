@@ -1,0 +1,45 @@
+{
+  "name": "say10",
+  "version": "1.0.0",
+  "description": "say10 - Advanced AI Server Administrator",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "say10-code": "./dist/cli/admin-cli.js",
+    "satan": "./dist/cli/admin-cli.js"
+  },
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "dev:cli": "tsx cli/admin-cli.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "satan": "tsx cli/admin-cli.ts chat",
+    "say10": "tsx cli/admin-cli.ts chat",
+    "install-global": "npm run build && npm link",
+    "test": "bash test.sh"
+  },
+  "keywords": [
+    "mcp",
+    "server",
+    "admin",
+    "ollama",
+    "ai",
+    "say10",
+    "satan"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "chalk": "^5.3.0",
+    "commander": "^12.1.0",
+    "execa": "^9.5.2",
+    "inquirer": "^12.2.0",
+    "systeminformation": "^5.23.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}
