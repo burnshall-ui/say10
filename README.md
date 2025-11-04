@@ -1,5 +1,11 @@
 # say10 - Advanced AI Server Administrator
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-43853D?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Ollama](https://img.shields.io/badge/Ollama-000000?logo=ollama&logoColor=white)](https://ollama.ai)
+[![MCP](https://img.shields.io/badge/MCP-Model_Context_Protocol-blue)](https://modelcontextprotocol.io)
+
 > Your local AI Server Administrator - powered by Ollama & MCP
 
 A complete MCP (Model Context Protocol) Server that gives your Linux Server an AI-powered system administrator. Uses Ollama for local LLM inference and provides an interactive terminal CLI.
