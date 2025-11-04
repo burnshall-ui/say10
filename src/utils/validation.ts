@@ -4,6 +4,8 @@
  * Schützt vor Command Injection, Path Traversal und anderen Security Issues
  */
 
+import { normalize, resolve } from 'path';
+
 /**
  * Sanitizes service names to prevent command injection
  * @throws {Error} if service name contains invalid characters
@@ -47,8 +49,6 @@ export function sanitizeHostname(hostname: string): string {
  * @throws {Error} if path is outside /var/log or invalid
  */
 export function sanitizeLogPath(path: string): string {
-  const { normalize, resolve } = require('path');
-
   // Normalisiere und resolve den Pfad
   const normalizedPath = normalize(resolve(path));
 
@@ -96,7 +96,7 @@ export function sanitizeSearchPattern(pattern: string): string {
  * @throws {Error} if record type is invalid
  */
 export function sanitizeRecordType(recordType: string): string {
-  const validRecordTypes = ["A", "AAAA", "MX", "NS", "TXT", "CNAME", "SOA", "PTR"];
+  const validRecordTypes = ["A", "AAAA", "MX", "NS", "TXT", "CNAME", "SOA", "PTR", "ANY"];
 
   const upperType = recordType.toUpperCase();
   if (!validRecordTypes.includes(upperType)) {
@@ -147,6 +147,39 @@ export function sanitizeErrorMessage(msg: string): string {
   sanitized = sanitized.replace(/:\d{2,5}\b/g, ':[PORT]');
 
   return sanitized;
+}
+
+/**
+ * Validates IP address (IPv4 or IPv6) or hostname
+ * Accepts both IP addresses and hostnames
+ * @throws {Error} if invalid
+ */
+export function sanitizeHostnameOrIP(input: string): string {
+  if (!input || typeof input !== 'string') {
+    throw new Error('Hostname oder IP-Adresse erforderlich');
+  }
+
+  // IPv4 Pattern
+  const ipv4Regex = /^(\d{1,3}\.){3}\d{1,3}$/;
+  // IPv6 Pattern (simplified)
+  const ipv6Regex = /^([0-9a-fA-F]{0,4}:){2,7}[0-9a-fA-F]{0,4}$/;
+  
+  // Check if it's an IP address
+  if (ipv4Regex.test(input)) {
+    // Validate IPv4 octets
+    const octets = input.split('.').map(Number);
+    if (octets.every(octet => octet >= 0 && octet <= 255)) {
+      return input;
+    }
+    throw new Error(`Ungültige IPv4-Adresse: ${input}`);
+  }
+  
+  if (ipv6Regex.test(input)) {
+    return input; // IPv6 ist valide
+  }
+  
+  // Falls nicht IP, validiere als Hostname
+  return sanitizeHostname(input);
 }
 
 /**
