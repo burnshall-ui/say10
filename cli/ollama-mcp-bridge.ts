@@ -79,11 +79,11 @@ export class OllamaMCPBridge {
 
     console.log(chalk.blue("[say10] Connecting to MCP Server..."));
 
-    // Finde den Pfad zum MCP Server
-    const serverPath = new URL("../src/index.ts", import.meta.url).pathname;
+    // Finde den Pfad zum MCP Server (kompilierte Version)
+    const serverPath = new URL("../src/index.js", import.meta.url).pathname;
 
     this.transport = new StdioClientTransport({
-      command: "tsx",
+      command: "node",
       args: [serverPath],
     });
 

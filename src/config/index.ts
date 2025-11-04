@@ -7,12 +7,26 @@
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+import { existsSync } from 'fs';
+import { homedir } from 'os';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Lade .env aus Root-Verzeichnis
-dotenv.config({ path: join(__dirname, '../../.env') });
+// Suche .env in mehreren Locations (Priority: cwd > home > install dir)
+const envLocations = [
+  join(process.cwd(), '.env'),                    // Current directory
+  join(homedir(), '.say10.env'),                  // Home directory
+  join(__dirname, '../../.env'),                  // Install directory
+];
+
+const envPath = envLocations.find(p => existsSync(p));
+if (envPath) {
+  dotenv.config({ path: envPath, debug: false });
+} else {
+  // Fallback: Silent load, use defaults
+  dotenv.config({ path: join(__dirname, '../../.env'), debug: false });
+}
 
 /**
  * Application Configuration
