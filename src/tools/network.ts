@@ -6,6 +6,7 @@
 
 import { Tool } from "@modelcontextprotocol/sdk/types.js";
 import { execa } from "execa";
+import { sanitizeHostname, sanitizeRecordType } from "../utils/validation.js";
 
 /**
  * Gibt alle Network Tools zurück

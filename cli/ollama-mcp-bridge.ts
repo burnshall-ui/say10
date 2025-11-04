@@ -20,7 +20,11 @@ function showPerformanceStats(data: OllamaResponse) {
     const tokensPerSec = (data.eval_count / (data.eval_duration / 1e9)).toFixed(2);
     const totalSec = data.total_duration ? (data.total_duration / 1e9).toFixed(1) : 'N/A';
 
-    console.log(chalk.gray(`\n  [PERF] ${tokensPerSec} tokens/sec | ${data.eval_count} tokens | ${totalSec}s total`));
+    console.log("");
+    console.log(chalk.red.dim("  [") + chalk.red.bold("PERF") + chalk.red.dim("]") +
+      chalk.gray(` ${tokensPerSec} tokens/sec `) + chalk.red.dim("│") +
+      chalk.gray(` ${data.eval_count} tokens `) + chalk.red.dim("│") +
+      chalk.gray(` ${totalSec}s total`));
   }
 }
 
@@ -77,7 +81,7 @@ export class OllamaMCPBridge {
       return;
     }
 
-    console.log(chalk.blue("[say10] Connecting to MCP Server..."));
+    console.log(chalk.red.dim("  [") + chalk.red.bold("SAY10") + chalk.red.dim("]") + chalk.gray(" Connecting to MCP Server..."));
 
     // Finde den Pfad zum MCP Server (kompilierte Version)
     const serverPath = new URL("../src/index.js", import.meta.url).pathname;
@@ -93,7 +97,7 @@ export class OllamaMCPBridge {
     // Lade verfügbare Tools
     await this.loadTools();
 
-    console.log(chalk.green(`[say10] Connected. ${this.tools.length} tools available`));
+    console.log(chalk.red.dim("  [") + chalk.red.bold("SAY10") + chalk.red.dim("]") + chalk.gray(` Connected. ${this.tools.length} tools available`));
   }
 
   /**
@@ -104,7 +108,7 @@ export class OllamaMCPBridge {
       const response = await this.client.listTools();
       this.tools = response.tools || [];
     } catch (error) {
-      console.error(chalk.red("[ERROR] Fehler beim Laden der Tools:"), error);
+      console.error(chalk.red.bold("  [ERROR] ") + chalk.gray("Fehler beim Laden der Tools: " + error));
       this.tools = [];
     }
   }
@@ -128,7 +132,8 @@ export class OllamaMCPBridge {
    */
   async callTool(name: string, args: any): Promise<string> {
     try {
-      console.log(chalk.gray(`  [EXEC] ${name}(${JSON.stringify(args).substring(0, 50)}...)`));
+      console.log(chalk.red.dim("  [") + chalk.red.bold("EXEC") + chalk.red.dim("]") +
+        chalk.gray(` ${name}(${JSON.stringify(args).substring(0, 40)}...)`));
 
       const result = await this.client.callTool({
         name,
@@ -144,7 +149,7 @@ export class OllamaMCPBridge {
       return JSON.stringify(result);
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error);
-      console.error(chalk.red(`  [ERROR] ${errorMsg}`));
+      console.error(chalk.red.bold("  [ERROR] ") + chalk.gray(errorMsg));
       return `Error: ${errorMsg}`;
     }
   }
@@ -156,7 +161,7 @@ export class OllamaMCPBridge {
     if (this.transport && this.connected) {
       await this.client.close();
       this.connected = false;
-      console.log(chalk.yellow("[say10] MCP connection closed"));
+      console.log(chalk.red.dim("  [") + chalk.red.bold("SAY10") + chalk.red.dim("]") + chalk.gray(" MCP connection closed"));
     }
   }
 
@@ -200,26 +205,28 @@ export class OllamaWithMCP {
     // Setup Approval Handler
     setApprovalHandler(async (request: ApprovalRequest) => {
       console.log("");
-      console.log(chalk.yellow("[WARNING] ") + chalk.bold("Approval Required"));
-      console.log(chalk.gray("─".repeat(50)));
-      console.log(chalk.white("Command: ") + chalk.cyan(request.command));
-      console.log(chalk.white("Reason:  ") + chalk.yellow(request.reason));
+      console.log(chalk.red.dim("  ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓"));
+      console.log(chalk.red.dim("  ┃ ") + chalk.red.bold("⚠  APPROVAL REQUIRED") + chalk.red.dim("                         ┃"));
+      console.log(chalk.red.dim("  ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫"));
+      console.log(chalk.red.dim("  ┃ ") + chalk.white("Command: ") + chalk.red(request.command.substring(0, 33)) + chalk.red.dim(" ┃"));
+      console.log(chalk.red.dim("  ┃ ") + chalk.white("Reason:  ") + chalk.gray(request.reason.substring(0, 33)) + chalk.red.dim(" ┃"));
 
       if (request.destructive) {
-        console.log(chalk.red("[WARN] Destructive action"));
+        console.log(chalk.red.dim("  ┃ ") + chalk.red.bold("[!] Destructive action") + chalk.red.dim("                     ┃"));
       }
 
       if (request.requiresSudo) {
-        console.log(chalk.red("[WARN] Requires sudo/root privileges"));
+        console.log(chalk.red.dim("  ┃ ") + chalk.red.bold("[!] Requires sudo/root") + chalk.red.dim("                     ┃"));
       }
 
-      console.log(chalk.gray("─".repeat(50)));
+      console.log(chalk.red.dim("  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛"));
+      console.log("");
 
       const answer = await inquirer.prompt([
         {
           type: "confirm",
           name: "approve",
-          message: "Command ausführen?",
+          message: "Execute this command?",
           default: false,
         },
       ]);
@@ -280,7 +287,9 @@ export class OllamaWithMCP {
 
       // Check for tool calls
       if (data.message.tool_calls && data.message.tool_calls.length > 0) {
-        console.log(chalk.gray(`\n  [TOOLS] Executing ${data.message.tool_calls.length} tool(s)...`));
+        console.log("");
+        console.log(chalk.red.dim("  [") + chalk.red.bold("TOOLS") + chalk.red.dim("]") +
+          chalk.gray(` Executing ${data.message.tool_calls.length} tool(s)...`));
 
         // Execute tool calls
         const toolResults: string[] = [];

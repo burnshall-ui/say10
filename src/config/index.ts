@@ -20,13 +20,20 @@ const envLocations = [
   join(__dirname, '../../.env'),                  // Install directory
 ];
 
+// Unterdrücke dotenv Output komplett
+const originalStdoutWrite = process.stdout.write;
+process.stdout.write = () => true;
+
 const envPath = envLocations.find(p => existsSync(p));
 if (envPath) {
-  dotenv.config({ path: envPath, debug: false });
+  dotenv.config({ path: envPath, debug: false, override: false });
 } else {
   // Fallback: Silent load, use defaults
-  dotenv.config({ path: join(__dirname, '../../.env'), debug: false });
+  dotenv.config({ path: join(__dirname, '../../.env'), debug: false, override: false });
 }
+
+// Restore stdout
+process.stdout.write = originalStdoutWrite;
 
 /**
  * Application Configuration

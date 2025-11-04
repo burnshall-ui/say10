@@ -1,6 +1,6 @@
 /**
  * Log Analysis Tools
- * 
+ *
  * Tools für System- und Application-Log Analyse
  */
 
@@ -8,6 +8,7 @@ import { Tool } from "@modelcontextprotocol/sdk/types.js";
 import { execa } from "execa";
 import { readFile } from "fs/promises";
 import { existsSync } from "fs";
+import { sanitizeLogPath, sanitizeSearchPattern } from "../utils/validation.js";
 
 /**
  * Gibt alle Log Tools zurück
@@ -170,13 +171,18 @@ async function searchLogs(
   lines: number = 100
 ): Promise<{ content: Array<{ type: string; text: string }> }> {
   try {
+    // Validate and sanitize pattern to prevent ReDoS attacks
+    const sanitizedPattern = sanitizeSearchPattern(pattern);
+
     const { stdout } = await execa("journalctl", [
       "-n",
       String(lines * 10), // Mehr Zeilen durchsuchen
       "--no-pager",
       "-g",
-      pattern,
-    ]);
+      sanitizedPattern,
+    ], {
+      timeout: 15000, // 15 second timeout to prevent hanging
+    });
     
     const matchedLines = stdout.split("\n").slice(-lines); // Nur die letzten N Treffer
     
@@ -234,16 +240,14 @@ async function tailLogs(
   lines: number = 50
 ): Promise<{ content: Array<{ type: string; text: string }> }> {
   try {
-    // Sicherheitscheck: Nur Logs in /var/log erlauben
-    if (!path.startsWith("/var/log/") && !path.startsWith("/var/log")) {
-      throw new Error("Nur Log-Dateien in /var/log/ sind erlaubt");
-    }
-    
-    if (!existsSync(path)) {
+    // Validate and sanitize path to prevent path traversal attacks
+    const sanitizedPath = sanitizeLogPath(path);
+
+    if (!existsSync(sanitizedPath)) {
       throw new Error(`Log-Datei nicht gefunden: ${path}`);
     }
-    
-    const { stdout } = await execa("tail", ["-n", String(lines), path]);
+
+    const { stdout } = await execa("tail", ["-n", String(lines), sanitizedPath]);
     
     let output = `[FILE] Log File: ${path}\n\n`;
     output += `Letzte ${lines} Zeilen:\n\n`;

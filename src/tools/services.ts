@@ -1,11 +1,12 @@
 /**
  * Service Control Tools
- * 
+ *
  * Tools für systemd Service Management
  */
 
 import { Tool } from "@modelcontextprotocol/sdk/types.js";
 import { execa } from "execa";
+import { sanitizeServiceName } from "../utils/validation.js";
 
 /**
  * Gibt alle Service Tools zurück
@@ -227,8 +228,9 @@ async function serviceStatus(
   service: string
 ): Promise<{ content: Array<{ type: string; text: string }> }> {
   try {
-    // Ensure service name ends with .service if not present
-    const serviceName = service.endsWith(".service") ? service : `${service}.service`;
+    // Validate and sanitize service name to prevent command injection
+    const sanitized = sanitizeServiceName(service);
+    const serviceName = sanitized.endsWith(".service") ? sanitized : `${sanitized}.service`;
     
     const { stdout, stderr, exitCode } = await execa("systemctl", ["status", serviceName], {
       reject: false,
@@ -279,8 +281,10 @@ async function restartService(
   service: string
 ): Promise<{ content: Array<{ type: string; text: string }> }> {
   try {
-    const serviceName = service.endsWith(".service") ? service : `${service}.service`;
-    
+    // Validate and sanitize service name to prevent command injection
+    const sanitized = sanitizeServiceName(service);
+    const serviceName = sanitized.endsWith(".service") ? sanitized : `${sanitized}.service`;
+
     // WICHTIG: Dies sollte nur nach Approval ausgeführt werden!
     // Die Approval-Logik wird im CLI/Safety Layer implementiert
     const { stdout, stderr } = await execa("sudo", ["systemctl", "restart", serviceName]);
@@ -331,7 +335,9 @@ async function enableService(
   service: string
 ): Promise<{ content: Array<{ type: string; text: string }> }> {
   try {
-    const serviceName = service.endsWith(".service") ? service : `${service}.service`;
+    // Validate and sanitize service name to prevent command injection
+    const sanitized = sanitizeServiceName(service);
+    const serviceName = sanitized.endsWith(".service") ? sanitized : `${sanitized}.service`;
     
     const { stdout } = await execa("sudo", ["systemctl", "enable", serviceName]);
     
@@ -366,7 +372,9 @@ async function checkServiceLogs(
   lines: number = 50
 ): Promise<{ content: Array<{ type: string; text: string }> }> {
   try {
-    const serviceName = service.endsWith(".service") ? service : `${service}.service`;
+    // Validate and sanitize service name to prevent command injection
+    const sanitized = sanitizeServiceName(service);
+    const serviceName = sanitized.endsWith(".service") ? sanitized : `${sanitized}.service`;
     
     const { stdout } = await execa("journalctl", [
       "-u",

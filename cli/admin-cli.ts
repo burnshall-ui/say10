@@ -23,16 +23,19 @@ async function chatMode(modelName?: string): Promise<void> {
     modelName || config.ollama.model
   );
 
-  console.log(chalk.bold.green("\n"));
-  console.log(chalk.bold.green("  ███████╗ █████╗ ██╗   ██╗ ██╗ ██████╗ "));
-  console.log(chalk.bold.green("  ██╔════╝██╔══██╗╚██╗ ██╔╝███║██╔═████╗"));
-  console.log(chalk.bold.green("  ███████╗███████║ ╚████╔╝ ╚██║██║██╔██║"));
-  console.log(chalk.bold.green("  ╚════██║██╔══██║  ╚██╔╝   ██║████╔╝██║"));
-  console.log(chalk.bold.green("  ███████║██║  ██║   ██║    ██║╚██████╔╝"));
-  console.log(chalk.bold.green("  ╚══════╝╚═╝  ╚═╝   ╚═╝    ╚═╝ ╚═════╝ "));
-  console.log(chalk.gray("  ─────────────────────────────────────────"));
-  console.log(chalk.gray("  Advanced AI Server Administrator"));
-  console.log(chalk.gray("  ─────────────────────────────────────────\n"));
+  console.log("");
+  console.log("");
+  console.log(chalk.red("        ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓"));
+  console.log(chalk.red("        ┃                                               ┃"));
+  console.log(chalk.red("        ┃   ") + chalk.white.bold("███████╗  █████╗  ██╗   ██╗") + chalk.red.bold(" ███ ") + chalk.white.bold(" ██████╗ ") + chalk.red("   ┃"));
+  console.log(chalk.red("        ┃   ") + chalk.white.bold("██╔════╝ ██╔══██╗ ╚██╗ ██╔╝") + chalk.red.bold(" ███ ") + chalk.white.bold("██╔═████╗") + chalk.red("   ┃"));
+  console.log(chalk.red("        ┃   ") + chalk.white.bold("███████╗ ███████║  ╚████╔╝ ") + chalk.red.bold(" ███ ") + chalk.white.bold("██║██╔██║") + chalk.red("   ┃"));
+  console.log(chalk.red("        ┃   ") + chalk.white.bold("╚════██║ ██╔══██║   ╚██╔╝  ") + chalk.red.bold(" ███ ") + chalk.white.bold("████╔╝██║") + chalk.red("   ┃"));
+  console.log(chalk.red("        ┃   ") + chalk.white.bold("███████║ ██║  ██║    ██║   ") + chalk.red.bold(" ███ ") + chalk.white.bold("╚██████╔╝") + chalk.red("   ┃"));
+  console.log(chalk.red("        ┃   ") + chalk.white.bold("╚══════╝ ╚═╝  ╚═╝    ╚═╝   ") + chalk.red.bold(" ╚══╝") + chalk.white.bold(" ╚═════╝ ") + chalk.red("   ┃"));
+  console.log(chalk.red("        ┃                                               ┃"));
+  console.log(chalk.red("        ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛"));
+  console.log("");
 
   try {
     // Initialisiere MCP Bridge
@@ -47,9 +50,9 @@ async function chatMode(modelName?: string): Promise<void> {
 
     ollama.setSystemPrompt(systemPrompt);
 
-    console.log(chalk.green("[SYSTEM] Chat session initialized"));
-    console.log(chalk.gray("[SYSTEM] Type 'exit' to terminate\n"));
-    console.log(chalk.gray("─".repeat(60)));
+    console.log(chalk.red.dim("  [") + chalk.red.bold("SYSTEM") + chalk.red.dim("]") + chalk.gray(" Session initialized"));
+    console.log("");
+    console.log(chalk.red.dim("  " + "━".repeat(60)));
     console.log("");
 
     // Interactive Chat Loop
@@ -60,7 +63,7 @@ async function chatMode(modelName?: string): Promise<void> {
 
     const askQuestion = (): Promise<string> => {
       return new Promise((resolve) => {
-        rl.question(chalk.bold.cyan("Du: "), (answer) => {
+        rl.question(chalk.red.bold("  ▶ ") + chalk.white.bold("You") + chalk.red(":") + " ", (answer) => {
           resolve(answer);
         });
       });
@@ -76,27 +79,35 @@ async function chatMode(modelName?: string): Promise<void> {
       }
 
       if (userInput.toLowerCase() === "exit" || userInput.toLowerCase() === "quit") {
-        console.log(chalk.yellow("\n[SYSTEM] Session terminated\n"));
+        console.log("");
+        console.log(chalk.red.dim("  [") + chalk.red.bold("SYSTEM") + chalk.red.dim("]") + chalk.gray(" Session terminated"));
+        console.log("");
         running = false;
         break;
       }
 
       try {
-        console.log(chalk.cyan("\n[say10]"));
-        const response = await ollama.chat(userInput);
-        console.log(chalk.white(response));
         console.log("");
-        console.log(chalk.gray("─".repeat(60)));
+        console.log(chalk.red.bold("  ◀ ") + chalk.red.bold("SAY10") + chalk.red(":"));
+        console.log("");
+        const response = await ollama.chat(userInput);
+        console.log(chalk.white("  " + response.split("\n").join("\n  ")));
+        console.log("");
+        console.log(chalk.red.dim("  " + "━".repeat(60)));
         console.log("");
       } catch (error) {
-        console.error(chalk.red(`\n[ERROR] ${error}\n`));
+        console.error("");
+        console.error(chalk.red.bold("  [ERROR] ") + chalk.gray(error));
+        console.error("");
       }
     }
 
     rl.close();
     await ollama.cleanup();
   } catch (error) {
-    console.error(chalk.red(`\n[FATAL] ${error}\n`));
+    console.error("");
+    console.error(chalk.red.bold("  [FATAL] ") + chalk.gray(error));
+    console.error("");
     process.exit(1);
   }
 }
@@ -105,7 +116,9 @@ async function chatMode(modelName?: string): Promise<void> {
  * Quick Status Command
  */
 async function quickStatus(): Promise<void> {
-  console.log(chalk.blue("\n[SYSTEM] Fetching status...\n"));
+  console.log("");
+  console.log(chalk.red.dim("  [") + chalk.red.bold("SYSTEM") + chalk.red.dim("]") + chalk.gray(" Fetching status..."));
+  console.log("");
 
   const bridge = new OllamaMCPBridge();
 
@@ -113,10 +126,12 @@ async function quickStatus(): Promise<void> {
     await bridge.connect();
 
     const result = await bridge.callTool("system_status", {});
-    console.log(result);
+    console.log(chalk.white("  " + result.split("\n").join("\n  ")));
     console.log("");
   } catch (error) {
-    console.error(chalk.red(`[ERROR] ${error}`));
+    console.error("");
+    console.error(chalk.red.bold("  [ERROR] ") + chalk.gray(error));
+    console.error("");
   } finally {
     await bridge.disconnect();
   }
@@ -126,7 +141,9 @@ async function quickStatus(): Promise<void> {
  * Quick Logs Command
  */
 async function quickLogs(lines?: string): Promise<void> {
-  console.log(chalk.blue("\n[SYSTEM] Fetching logs...\n"));
+  console.log("");
+  console.log(chalk.red.dim("  [") + chalk.red.bold("SYSTEM") + chalk.red.dim("]") + chalk.gray(" Fetching logs..."));
+  console.log("");
 
   const bridge = new OllamaMCPBridge();
 
@@ -136,10 +153,12 @@ async function quickLogs(lines?: string): Promise<void> {
     const result = await bridge.callTool("read_syslog", {
       lines: lines ? parseInt(lines) : 50,
     });
-    console.log(result);
+    console.log(chalk.white("  " + result.split("\n").join("\n  ")));
     console.log("");
   } catch (error) {
-    console.error(chalk.red(`[ERROR] ${error}`));
+    console.error("");
+    console.error(chalk.red.bold("  [ERROR] ") + chalk.gray(error));
+    console.error("");
   } finally {
     await bridge.disconnect();
   }
