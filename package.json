@@ -12,10 +12,12 @@
     "dev": "tsx src/index.ts",
     "dev:cli": "tsx cli/admin-cli.ts",
     "build": "tsc",
+    "prepare": "npm run build",
     "start": "node dist/index.js",
     "satan": "tsx cli/admin-cli.ts chat",
     "say10": "tsx cli/admin-cli.ts chat",
     "install-global": "npm run build && npm link",
+    "uninstall-global": "npm unlink -g",
     "test": "bash test.sh"
   },
   "keywords": [

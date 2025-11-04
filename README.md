@@ -25,18 +25,26 @@ A complete MCP (Model Context Protocol) Server that gives your Linux Server an A
 ## Quick Start
 
 ```bash
-# 1. Installation
+# 1. Clone & Install
+git clone https://github.com/burnshall-ui/say10.git
+cd say10
 npm install
 
 # 2. Konfiguration
 cp .env.example .env
 # Bearbeite .env und setze dein Ollama Model
 
-# 3. Starten
-npm run satan
+# 3. Ollama Model laden
+ollama pull gpt-oss:20b
+
+# 4. Global installieren
+npm run install-global
+
+# 5. Von überall starten!
+satan
 ```
 
-**Done!** say10 ist jetzt dein Server Admin.
+**Done!** Du kannst jetzt `satan` von jedem Verzeichnis aus starten.
 
 ## Empfohlene Models
 
@@ -149,9 +157,13 @@ Du: exit
 
 ### Installation
 
+#### Option 1: Global Installation (Empfohlen)
+
+Nach globaler Installation kannst du `satan` von überall aufrufen:
+
 ```bash
 # 1. Repository klonen
-git clone <repo-url>
+git clone https://github.com/burnshall-ui/say10.git
 cd say10
 
 # 2. Dependencies installieren
@@ -164,8 +176,28 @@ nano .env  # Passe dein Model an
 # 4. Ollama Model laden
 ollama pull gpt-oss:20b
 
-# 5. Starten
+# 5. Global installieren
+npm run install-global
+
+# 6. Von überall starten!
+cd ~/irgendein/anderer/ordner
+satan
+```
+
+#### Option 2: Lokale Installation
+
+```bash
+# 1-4 wie oben
+
+# 5. Lokal starten
 npm run satan
+```
+
+### Deinstallation
+
+```bash
+# Global deinstallieren
+npm run uninstall-global
 ```
 
 ## Konfiguration
@@ -214,26 +246,33 @@ Aktuell konfiguriert als:
 
 ### Interactive Mode (Empfohlen)
 
-```bash
-# Satan Chat starten
-npm run satan
+#### Global (nach `npm run install-global`)
 
-# Alternativ
-npm run say10
+```bash
+# Von überall starten (startet automatisch im Chat Mode)
+satan
 
 # Mit spezifischem Model
-npx tsx cli/admin-cli.ts chat --model mistral:latest
+satan chat --model mistral:latest
+
+# Quick Commands
+satan status        # Schneller System-Status
+satan logs          # Zeigt Logs
+satan logs -n 100   # Zeigt 100 Zeilen
+
+# Help
+satan --help
 ```
 
-### Quick Commands
+#### Lokal (ohne global install)
 
 ```bash
-# System Status
-npm run satan status
+# Chat starten
+npm run satan
 
-# Logs anzeigen
+# Quick Commands
+npm run satan status
 npm run satan logs
-npm run satan logs --lines 100
 ```
 
 ### Development
