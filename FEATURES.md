@@ -1,14 +1,14 @@
 # Feature Overview - AI Server Admin MCP
 
-## 🎯 Kernfeatures
+## Kernfeatures
 
 ### 1. System Monitoring
 
 **Tools:**
-- ✅ `check_disk_space` - Disk Space Usage mit Farb-Indikatoren
-- ✅ `check_memory` - RAM & Swap Monitoring
-- ✅ `check_cpu` - CPU Load, Usage & Top Prozesse
-- ✅ `system_status` - Kompletter System-Überblick
+- `check_disk_space` - Disk Space Usage mit Farb-Indikatoren
+- `check_memory` - RAM & Swap Monitoring
+- `check_cpu` - CPU Load, Usage & Top Prozesse
+- `system_status` - Kompletter System-Überblick
 
 **Use Cases:**
 - Schneller Health Check
@@ -20,7 +20,7 @@
 ```
 Du: Wie geht es dem Server?
 AI: [nutzt system_status Tool]
-    ✅ Alles läuft gut!
+    Alles läuft gut!
     CPU: 12%, Memory: 38%, Disk: 42%
 ```
 
@@ -29,10 +29,10 @@ AI: [nutzt system_status Tool]
 ### 2. Log-Analyse
 
 **Tools:**
-- ✅ `read_syslog` - System Logs mit Filter-Optionen
-- ✅ `search_logs` - Pattern-basierte Log-Suche
-- ✅ `tail_logs` - Spezifische Log-Dateien lesen
-- ✅ `analyze_errors` - Error-Pattern Detection & Gruppierung
+- `read_syslog` - System Logs mit Filter-Optionen
+- `search_logs` - Pattern-basierte Log-Suche
+- `tail_logs` - Spezifische Log-Dateien lesen
+- `analyze_errors` - Error-Pattern Detection & Gruppierung
 
 **Use Cases:**
 - Fehlersuche und Debugging
@@ -44,7 +44,7 @@ AI: [nutzt system_status Tool]
 ```
 Du: Gab es Errors in den letzten 24 Stunden?
 AI: [nutzt analyze_errors Tool]
-    📊 3 Error Patterns gefunden:
+    3 Error Patterns gefunden:
     1. 15x - Network timeout to api.example.com
     2. 5x - Failed to connect to database
     3. 2x - Disk quota warning
@@ -55,11 +55,11 @@ AI: [nutzt analyze_errors Tool]
 ### 3. Service Management
 
 **Tools:**
-- ✅ `list_services` - Alle systemd Services mit Status
-- ✅ `service_status` - Detaillierter Service Status
-- ✅ `restart_service` - Service Neustart (mit Approval)
-- ✅ `enable_service` - Service für Autostart aktivieren (mit Approval)
-- ✅ `check_service_logs` - Service-spezifische Logs
+- `list_services` - Alle systemd Services mit Status
+- `service_status` - Detaillierter Service Status
+- `restart_service` - Service Neustart (mit Approval)
+- `enable_service` - Service für Autostart aktivieren (mit Approval)
+- `check_service_logs` - Service-spezifische Logs
 
 **Use Cases:**
 - Services überwachen
@@ -71,7 +71,7 @@ AI: [nutzt analyze_errors Tool]
 ```
 Du: Liste alle failed Services
 AI: [nutzt list_services Tool mit filter=failed]
-    🔴 2 Failed Services gefunden:
+    2 Failed Services gefunden:
     - postgresql.service
     - custom-app.service
 ```
@@ -106,11 +106,11 @@ AI: [nutzt list_services Tool mit filter=failed]
 Du: Starte nginx neu
 AI: [möchte restart_service nutzen]
 
-⚠️  Approval Required
+ Approval Required
 ────────────────────────────────────────
 Command: sudo systemctl restart nginx
 Reason:  Destructive Action, Erfordert sudo
-⚠️  Dies ist eine DESTRUCTIVE Action!
+ Dies ist eine DESTRUCTIVE Action!
 ────────────────────────────────────────
 ? Command ausführen? (y/N)
 ```
@@ -138,8 +138,7 @@ npm run admin logs       # Schneller Log-View
 
 **Features:**
 - Farb-kodierte Output
-- Clear Status Indicators (✅ ⚠️ 🔴)
-- Emojis für bessere UX
+- Clear Status Indicators (OK, WARN, CRITICAL)
 - Strukturierte Ausgaben
 
 ---
@@ -168,33 +167,33 @@ Vordefinierte Prompts für häufige Tasks:
 ```
 Du: Führe einen Health Check durch
 AI: [nutzt health_check Prompt Template]
-    🔍 Starte vollständigen Health Check...
+    Starte vollständigen Health Check...
     [nutzt mehrere Tools]
-    ✅ System Health: Gut
-    📊 Details: ...
+    System Health: Gut
+    Details: ...
 ```
 
 ---
 
-## 🚀 Workflow Examples
+## Workflow Examples
 
 ### Morning Routine Check
 
 ```
 Du: Guten Morgen! Wie geht es dem Server?
 
-AI: Guten Morgen! 🌅
+AI: Guten Morgen!
     [system_status]
-    ✅ Server läuft stabil seit 12 Tagen
+    Server läuft stabil seit 12 Tagen
     
     [analyze_errors]
-    📋 Gestern Abend gab es 3 Warnings:
+    Gestern Abend gab es 3 Warnings:
     - Network timeout (temporary)
     
     [list_services mit filter=failed]
-    ✅ Alle Services laufen
+    Alle Services laufen
 
-    Zusammenfassung: Alles gut! 👍
+    Zusammenfassung: Alles gut!
 ```
 
 ---
@@ -206,14 +205,14 @@ Du: Nginx läuft nicht mehr richtig
 
 AI: Lass mich das checken...
     [service_status nginx]
-    🔴 nginx ist failed
+    nginx ist failed
     
     [check_service_logs nginx]
-    📋 Letzte Logs zeigen:
+    Letzte Logs zeigen:
     "Port 80 already in use"
     
     [check_cpu mit top processes]
-    💡 Ich sehe apache2 läuft auf Port 80
+    Ich sehe apache2 läuft auf Port 80
     
     Empfehlung: Stoppe apache2 oder 
     konfiguriere nginx für anderen Port.
@@ -226,15 +225,15 @@ AI: Lass mich das checken...
 ```
 Du: Mach einen Security Check
 
-AI: 🔒 Starte Security Audit...
+AI: Starte Security Audit...
     [search_logs pattern="Failed password"]
-    ⚠️ 15 Failed login attempts gefunden
+    15 Failed login attempts gefunden
     
     [list_services filter=active]
-    ✅ fail2ban ist active
+    fail2ban ist active
     
     [service_status ufw]
-    ✅ Firewall ist active
+    Firewall ist active
     
     Empfehlungen:
     - Failed logins sind normal (Bots)
@@ -249,20 +248,20 @@ AI: 🔒 Starte Security Audit...
 ```
 Du: Server ist langsam
 
-AI: 🔍 Performance Check...
+AI: Performance Check...
     [check_cpu]
-    🔴 CPU: 95% (mysql: 80%)
+    CPU: 95% (mysql: 80%)
     
     [check_memory]
-    ⚠️ Memory: 92% (nur 1.2 GB frei)
+    Memory: 92% (nur 1.2 GB frei)
     
     [check_disk_space]
-    ✅ Disk: 45%
+    Disk: 45%
     
     Problem: MySQL nutzt zu viel CPU & RAM
     
     [check_service_logs mysql]
-    📋 Logs zeigen: Slow queries
+    Logs zeigen: Slow queries
     
     Empfehlung: MySQL Queries optimieren
     oder mehr RAM zuweisen
@@ -270,30 +269,30 @@ AI: 🔍 Performance Check...
 
 ---
 
-## 🎨 UX Features
+## UX Features
 
 ### Visual Indicators
 
-- ✅ **Green** - Alles OK
-- ⚠️ **Yellow** - Warning, Aufmerksamkeit nötig
-- 🔴 **Red** - Critical, sofort handeln
-- 🔧 **Tools** - Tool wird genutzt
-- 💬 **Chat** - AI antwortet
-- 🔒 **Security** - Security-relevante Info
+- **Green** - Alles OK
+- **Yellow** - Warning, Aufmerksamkeit nötig
+- **Red** - Critical, sofort handeln
+- **Tools** - Tool wird genutzt
+- **Chat** - AI antwortet
+- **Security** - Security-relevante Info
 
 ### Structured Output
 
 Alle Tools geben strukturierte, leicht lesbare Ausgaben:
 
 ```
-📊 **Disk Space Usage**
+**Disk Space Usage**
 
-✅ **/** (ext4)
+**/** (ext4)
    Größe: 100.0 GB
    Genutzt: 45.2 GB (45%)
    Verfügbar: 54.8 GB
 
-✅ **/home** (ext4)
+**/home** (ext4)
    Größe: 500.0 GB
    Genutzt: 120.5 GB (24%)
    Verfügbar: 379.5 GB
@@ -316,7 +315,7 @@ AI: [bezieht sich auf vorherigen Status & Logs]
 
 ---
 
-## 🔧 Customization
+## Customization
 
 ### Eigene Prompts
 
@@ -350,22 +349,22 @@ Du bist ein AI Administrator...
 
 ---
 
-## 📈 Future Features (Roadmap)
+## Future Features (Roadmap)
 
-- 🐳 Docker Container Management
-- 🗄️ Database Health Checks (PostgreSQL, MySQL, Redis)
-- 📊 Prometheus Metrics Export
-- 🌐 Web Dashboard
-- 📧 Email Alerts
-- 📅 Scheduled Health Reports
-- 🔐 Advanced Security Scans
-- 🚀 Deployment Automation
-- 📦 Package Update Management
-- 🔄 Backup Management
+- Docker Container Management
+- Database Health Checks (PostgreSQL, MySQL, Redis)
+- Prometheus Metrics Export
+- Web Dashboard
+- Email Alerts
+- Scheduled Health Reports
+- Advanced Security Scans
+- Deployment Automation
+- Package Update Management
+- Backup Management
 
 ---
 
-## 💡 Pro Tips
+## Pro Tips
 
 1. **Morning Check:** Frage jeden Morgen "Wie geht es dem Server?"
 2. **Proactive:** Lass AI regelmäßig Errors analysieren
@@ -378,7 +377,7 @@ Du bist ein AI Administrator...
 
 ---
 
-## 🎓 Learning
+## Learning
 
 Die AI lernt durch Nutzung besser:
 

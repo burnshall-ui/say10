@@ -9,7 +9,7 @@
 
 ## Test Checklist
 
-### ✅ 1. Installation & Setup
+### 1. Installation & Setup
 
 ```bash
 # Dependencies installieren
@@ -25,7 +25,7 @@ npm run build
 
 ---
 
-### ✅ 2. MCP Server Start (Standalone)
+### 2. MCP Server Start (Standalone)
 
 ```bash
 npm start
@@ -33,15 +33,15 @@ npm start
 
 **Expected:**
 - Server startet
-- Ausgabe: "🚀 AI Server Admin MCP Server gestartet"
-- Ausgabe: "📡 Bereit für Verbindungen..."
+- Ausgabe: "AI Server Admin MCP Server gestartet"
+- Ausgabe: "Bereit für Verbindungen..."
 - Keine Errors
 
 **Test:** Ctrl+C zum Beenden
 
 ---
 
-### ✅ 3. Quick Status Command
+### 3. Quick Status Command
 
 ```bash
 npm run admin status
@@ -59,7 +59,7 @@ npm run admin status
 
 ---
 
-### ✅ 4. Quick Logs Command
+### 4. Quick Logs Command
 
 ```bash
 npm run admin logs
@@ -79,7 +79,7 @@ npm run admin logs -n 10
 
 ---
 
-### ✅ 5. Interactive Chat Mode - Basic
+### 5. Interactive Chat Mode - Basic
 
 ```bash
 npm run admin
@@ -87,11 +87,11 @@ npm run admin
 
 **Expected:**
 - Banner wird angezeigt
-- "🚀 Starte MCP Server..."
-- "✅ MCP Server gestartet"
-- "🔌 Verbinde mit MCP Server..."
-- "✅ Verbunden! X Tools verfügbar"
-- "💬 Chat gestartet!"
+- "Starte MCP Server..."
+- "MCP Server gestartet"
+- "Verbinde mit MCP Server..."
+- "Verbunden! X Tools verfügbar"
+- "Chat gestartet!"
 - Prompt: "Du: "
 
 **Test Eingabe:**
@@ -107,12 +107,12 @@ Du: exit
 ```
 
 **Expected:** 
-- "👋 Auf Wiedersehen!"
+- "Auf Wiedersehen!"
 - Server wird sauber beendet
 
 ---
 
-### ✅ 6. System Status via Chat
+### 6. System Status via Chat
 
 ```bash
 npm run admin
@@ -130,11 +130,11 @@ Du: Wie geht es dem Server?
   - Memory Info
   - Disk Info
   - Uptime
-- Emojis werden verwendet (✅, ⚠️, 🔴)
+- Status-Indikatoren werden verwendet (OK, WARN, CRITICAL)
 
 ---
 
-### ✅ 7. Disk Space Check
+### 7. Disk Space Check
 
 **Test:**
 ```
@@ -149,7 +149,7 @@ Du: Zeig mir den Disk Space
 
 ---
 
-### ✅ 8. Memory Check
+### 8. Memory Check
 
 **Test:**
 ```
@@ -164,7 +164,7 @@ Du: Wie viel RAM ist verfügbar?
 
 ---
 
-### ✅ 9. CPU Check
+### 9. CPU Check
 
 **Test:**
 ```
@@ -180,7 +180,7 @@ Du: Zeig mir die CPU Auslastung
 
 ---
 
-### ✅ 10. Log Reading
+### 10. Log Reading
 
 **Test:**
 ```
@@ -195,7 +195,7 @@ Du: Zeig mir die letzten System Logs
 
 ---
 
-### ✅ 11. Log Search
+### 11. Log Search
 
 **Test:**
 ```
@@ -209,7 +209,7 @@ Du: Suche in den Logs nach "error"
 
 ---
 
-### ✅ 12. Error Analysis
+### 12. Error Analysis
 
 **Test:**
 ```
@@ -221,11 +221,11 @@ Du: Gab es Errors in den letzten 24 Stunden?
 - Error-Zusammenfassung wird angezeigt
 - Grouped by Pattern
 - Häufigkeit wird genannt
-- Wenn keine Errors: ✅ Meldung
+- Wenn keine Errors: Meldung
 
 ---
 
-### ✅ 13. Service List
+### 13. Service List
 
 **Test:**
 ```
@@ -243,7 +243,7 @@ Du: Liste alle Services
 
 ---
 
-### ✅ 14. Service Status
+### 14. Service Status
 
 **Test:**
 ```
@@ -258,7 +258,7 @@ Du: Wie geht es dem ssh Service?
 
 ---
 
-### ✅ 15. Service Logs
+### 15. Service Logs
 
 **Test:**
 ```
@@ -272,7 +272,7 @@ Du: Zeig mir die nginx Logs
 
 ---
 
-### ✅ 16. Approval System - Service Restart
+### 16. Approval System - Service Restart
 
 **Test:**
 ```
@@ -283,19 +283,19 @@ Du: Starte nginx neu
 - AI möchte `restart_service` Tool nutzen
 - **Approval Dialog erscheint:**
   ```
-  ⚠️  Approval Required
+   Approval Required
   ────────────────────────────────────────────────
   Command: sudo systemctl restart nginx
   Reason:  Destructive Action, Erfordert sudo/root
-  ⚠️  Dies ist eine DESTRUCTIVE Action!
-  🔐 Erfordert sudo/root Rechte
+   Dies ist eine DESTRUCTIVE Action!
+  Erfordert sudo/root Rechte
   ────────────────────────────────────────────────
   ? Command ausführen? (Y/n)
   ```
 
 **Test Case A: Approve (y)**
 - Service wird neugestartet
-- AI bestätigt: "✅ Service wurde erfolgreich neugestartet"
+- AI bestätigt: "Service wurde erfolgreich neugestartet"
 - Status wird verifiziert
 
 **Test Case B: Reject (n)**
@@ -305,7 +305,7 @@ Du: Starte nginx neu
 
 ---
 
-### ✅ 17. Whitelist - Read-Only Commands
+### 17. Whitelist - Read-Only Commands
 
 **Test:**
 ```
@@ -319,7 +319,7 @@ Du: Zeig mir den Disk Space
 
 ---
 
-### ✅ 18. Multi-Tool Conversation
+### 18. Multi-Tool Conversation
 
 **Test:**
 ```
@@ -336,7 +336,7 @@ Du: Mach einen vollständigen Health Check
 
 ---
 
-### ✅ 19. Proactive Suggestions
+### 19. Proactive Suggestions
 
 **Test:**
 ```
@@ -351,7 +351,7 @@ Du: Gibt es Probleme auf dem Server?
 
 ---
 
-### ✅ 20. Error Handling
+### 20. Error Handling
 
 **Test A: Tool Error**
 ```
@@ -374,7 +374,7 @@ Du: Zeig mir den Status von nicht-existierender-service
 
 ---
 
-### ✅ 21. Different Ollama Models
+### 21. Different Ollama Models
 
 ```bash
 npm run admin chat --model llama3.2:latest
@@ -388,7 +388,7 @@ npm run admin chat --model mistral:latest
 
 ---
 
-### ✅ 22. Long Conversation
+### 22. Long Conversation
 
 Führe 10+ aufeinanderfolgende Fragen durch:
 1. "Wie geht es dem Server?"
@@ -410,7 +410,7 @@ Führe 10+ aufeinanderfolgende Fragen durch:
 
 ---
 
-### ✅ 23. Exit Handling
+### 23. Exit Handling
 
 **Test verschiedene Exit-Varianten:**
 ```
@@ -423,7 +423,7 @@ Ctrl+C
 
 **Expected:**
 - Alle führen zu sauberem Exit
-- "👋 Auf Wiedersehen!"
+- "Auf Wiedersehen!"
 - MCP Server wird gestoppt
 - Keine Zombie-Prozesse
 
@@ -450,14 +450,14 @@ top -p $(pgrep -f "tsx.*admin-cli")
 
 ## Security Tests
 
-### ✅ 1. Destructive Command Blocking
+### 1. Destructive Command Blocking
 
 Teste dass folgende Commands IMMER Approval brauchen:
 - `rm -rf /`
 - `systemctl stop ssh`
 - `shutdown now`
 
-### ✅ 2. Whitelist nur Read-Only
+### 2. Whitelist nur Read-Only
 
 Prüfe `config/whitelist.json`:
 - Keine destructive Commands
@@ -469,12 +469,12 @@ Prüfe `config/whitelist.json`:
 ## Regression Tests nach Code-Änderungen
 
 Nach jedem Update:
-1. ✅ Build erfolgreich (`npm run build`)
-2. ✅ MCP Server startet (`npm start`)
-3. ✅ Quick Status funktioniert (`npm run admin status`)
-4. ✅ Interactive Chat startet (`npm run admin`)
-5. ✅ Mindestens ein Tool funktioniert
-6. ✅ Approval Dialog erscheint bei destructive Action
+1. Build erfolgreich (`npm run build`)
+2. MCP Server startet (`npm start`)
+3. Quick Status funktioniert (`npm run admin status`)
+4. Interactive Chat startet (`npm run admin`)
+5. Mindestens ein Tool funktioniert
+6. Approval Dialog erscheint bei destructive Action
 
 ---
 
@@ -506,9 +506,9 @@ Wenn ein Test fehlschlägt:
 
 ## Success Criteria
 
-Alle Tests ✅ → **Ready for Production**
+Alle Tests → **Ready for Production**
 
-Mindestens 18/23 Tests ✅ → **Beta Ready**
+Mindestens 18/23 Tests → **Beta Ready**
 
-< 15 Tests ✅ → **Needs Work**
+< 15 Tests → **Needs Work**
 

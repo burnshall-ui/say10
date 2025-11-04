@@ -1,134 +1,252 @@
 # say10 - Advanced AI Server Administrator
 
-> Your local AI Administrator for Ubuntu Server - powered by Ollama & MCP
+> Your local AI Server Administrator - powered by Ollama & MCP
 
-A complete MCP (Model Context Protocol) Server that gives your Ubuntu Server an advanced AI administrator. Uses Ollama for local LLM and provides a terminal CLI similar to Claude Code.
+A complete MCP (Model Context Protocol) Server that gives your Linux Server an AI-powered system administrator. Uses Ollama for local LLM inference and provides an interactive terminal CLI.
 
-## ✨ Highlights
+## Highlights
 
-- 🖥️ **System Monitoring** - CPU, Memory, Disk Space mit intelligenter Analyse
-- 📋 **Log Analysis** - Automatische Error Detection & Pattern Recognition
-- ⚙️ **Service Management** - systemd Service Control mit Safety Guards
-- 🔒 **Security First** - Approval System für destructive Actions
-- 💬 **Terminal CLI** - Interaktiver Chat wie Claude Code
-- 🎯 **Proaktiv** - AI schlägt Verbesserungen vor und warnt bei Problemen
-- 🌍 **100% Lokal** - Alle Daten bleiben auf deinem Server
+- **System Monitoring** - CPU, Memory, Disk Space mit intelligenter Analyse
+- **Log Analysis** - Automatische Error Detection & Pattern Recognition
+- **Service Management** - systemd Service Control mit Safety Guards
+- **Security First** - Approval System für destructive Actions
+- **Terminal CLI** - Interaktiver Chat mit Live Performance Stats
+- **100% Lokal** - Alle Daten bleiben auf deinem Server
+- **Strukturiertes Logging** - Production-ready Logging mit pino
+- **Environment Config** - Flexible Konfiguration über .env Dateien
+- **Zynischer Sysadmin** - Professionelle, präzise Antworten mit subtiler Ironie
 
-## 🚀 Quick Start
+## Quick Start
 
 ```bash
 # 1. Installation
 npm install
 
-# 2. Build
-npm run build
+# 2. Konfiguration
+cp .env.example .env
+# Bearbeite .env und setze dein Ollama Model
 
-# 3. Starten!
+# 3. Starten
 npm run satan
 ```
 
-**Done!** say10 is now your server admin.
+**Done!** say10 ist jetzt dein Server Admin.
 
-## 📖 Dokumentation
+## Empfohlene Models
 
-- 📘 **[Quick Start Guide](QUICKSTART.md)** - In 5 Minuten loslegen
-- 📗 **[Setup Guide](SETUP.md)** - Detaillierte Installation & Konfiguration
-- 📕 **[Features](FEATURES.md)** - Alle Features im Detail
-- 📙 **[Manual Testing](test-manual.md)** - Test Guide für alle Features
+### gpt-oss:20b (Empfohlen)
+```bash
+ollama pull gpt-oss:20b
+```
+- **Performance:** ~10 tokens/sec
+- **Größe:** 13 GB
+- **RAM Bedarf:** ~14 GB
+- Beste Balance zwischen Geschwindigkeit und Intelligenz
+- Folgt System Prompt sehr gut
+- Antwortet kurz und präzise auf Deutsch
 
-## Beispiel Conversation
+### qwen3-coder:30b-a3b-q4_K_M (Alternativ)
+```bash
+ollama pull qwen3-coder:30b-a3b-q4_K_M
+```
+- **Performance:** ~12 tokens/sec
+- **Größe:** ~19 GB
+- **RAM Bedarf:** ~20 GB
+- Sehr intelligent, manchmal zu ausführlich
+
+### llama3.1:8b (Leichtgewicht)
+```bash
+ollama pull llama3.1:8b
+```
+- **Performance:** ~8 tokens/sec
+- **Größe:** ~4.7 GB
+- **RAM Bedarf:** ~6 GB
+- Gut für kleinere Server
+
+## Beispiel Session
 
 ```text
-  ███████╗ █████╗ ██╗   ██╗ ██╗ ██████╗ 
+  ███████╗ █████╗ ██╗   ██╗ ██╗ ██████╗
   ██╔════╝██╔══██╗╚██╗ ██╔╝███║██╔═████╗
   ███████╗███████║ ╚████╔╝ ╚██║██║██╔██║
   ╚════██║██╔══██║  ╚██╔╝   ██║████╔╝██║
   ███████║██║  ██║   ██║    ██║╚██████╔╝
-  ╚══════╝╚═╝  ╚═╝   ╚═╝    ╚═╝ ╚═════╝ 
+  ╚══════╝╚═╝  ╚═╝   ╚═╝    ╚═╝ ╚═════╝
   ─────────────────────────────────────────
   Advanced AI Server Administrator
 
-Du: Wie geht es dem Server?
+Du: servus, na wie gehts dem server?
 
-[say10] 
-  🔧 Lass mich schnell checken...
-  
-  ✅ System läuft stabil!
-  
-  **System:**
-  - Ubuntu 22.04 LTS
-  - Uptime: 12 Tage 5 Stunden
-  
-  **CPU:** ✅ 12% Auslastung
-  **Memory:** ✅ 6.2 GB / 16 GB (38%)
-  **Disk:** ✅ 42 GB / 100 GB (42%)
-  
-  Keine kritischen Probleme gefunden! 👍
+[say10]
+  [TOOLS] Executing 1 tool(s)...
+  [EXEC] system_status({}...)
 
-────────────────────────────────────────────────
+  [PERF] 10.55 tokens/sec | 408 tokens | 44.1s total
 
-Du: Gab es Errors?
+System‑Status in Kürze:
 
-🤖 AI: 
-  📊 Analysiere Logs der letzten 24h...
-  
-  Gefunden: 3 Error Patterns
-  
-  1. **15x** - Network timeout (temporary)
-  2. **5x** - Database connection hiccups
-  3. **2x** - Disk quota warning
-  
-  Die meisten sind minor und behoben.
-  Nur der Disk Space sollte beobachtet werden.
+* OS: Ubuntu 24.04.3 LTS, Kernel 6.8.0‑87‑generic
+* Uptime: 1 Tag 1 Std 32 Min
+* CPU: 6‑Kern‑Ryzen 5 3500, Load ≈ 2.8 % – OK
+* Speicher: 30.9 GB / 31.3 GB (≈ 99 % verwendet) – kritisch
+* Festplatte: 89 GB belegt von 935 GB – ausreichend
 
-────────────────────────────────────────────────
+Kurz gesagt: CPU und Festplattenkapazität sind in Ordnung,
+der RAM ist fast leer. Erstelle ggf. einen Swap‑Block oder
+schließe Anwendungen, die viel Speicher beanspruchen.
 
-Du: Starte nginx neu
+────────────────────────────────────────────────────────────
 
-⚠️  Approval Required
-────────────────────────────────────────────────
-Command: sudo systemctl restart nginx
-Reason:  Destructive Action, Erfordert sudo/root
-⚠️  Dies ist eine DESTRUCTIVE Action!
-────────────────────────────────────────────────
-? Command ausführen? (Y/n) y
+Du: exit
 
-🤖 AI: 
-  ✅ nginx wurde erfolgreich neugestartet!
-  Service läuft wieder einwandfrei.
+[SYSTEM] Session terminated
 ```
 
-## 🛠️ Features im Detail
+## Features
 
 ### System Monitoring Tools
 
 | Tool | Beschreibung |
 |------|--------------|
-| `check_disk_space` | Disk Usage mit Farb-Indikatoren |
-| `check_memory` | RAM & Swap Monitoring |
-| `check_cpu` | CPU Load & Top Prozesse |
-| `system_status` | Kompletter System-Überblick |
+| `check_disk_space` | Disk Usage mit Status-Indikatoren (OK/WARN/CRIT) |
+| `check_memory` | RAM & Swap Monitoring mit verfügbarem Speicher |
+| `check_cpu` | CPU Load, Load Average & Top Prozesse |
+| `system_status` | Kompletter System-Überblick (OS, Uptime, CPU, RAM, Disk) |
 
 ### Log Analysis Tools
 
 | Tool | Beschreibung |
 |------|--------------|
-| `read_syslog` | System Logs mit Filtern |
-| `search_logs` | Pattern-basierte Suche |
-| `tail_logs` | Spezifische Log-Dateien |
-| `analyze_errors` | Error-Pattern Detection |
+| `read_syslog` | System Logs mit Filtern (Zeilen, Priorität) |
+| `search_logs` | Pattern-basierte Suche in Logs |
+| `tail_logs` | Spezifische Log-Dateien live verfolgen |
+| `analyze_errors` | Automatische Error-Pattern Detection |
 
 ### Service Management Tools
 
 | Tool | Beschreibung |
 |------|--------------|
-| `list_services` | Alle systemd Services |
+| `list_services` | Alle systemd Services auflisten |
 | `service_status` | Detaillierter Service Status |
 | `restart_service` | Service Restart (mit Approval) |
 | `enable_service` | Autostart aktivieren (mit Approval) |
 | `check_service_logs` | Service-spezifische Logs |
 
-## 🔒 Sicherheit
+## Installation & Setup
+
+### Voraussetzungen
+
+- **Node.js 18+** (getestet mit v25.1.0)
+- **Ubuntu/Debian Linux** (getestet mit Ubuntu 24.04 LTS)
+- **Ollama** installiert und laufend
+- **NVIDIA GPU** optional für bessere Performance
+
+### Installation
+
+```bash
+# 1. Repository klonen
+git clone <repo-url>
+cd say10
+
+# 2. Dependencies installieren
+npm install
+
+# 3. Konfiguration
+cp .env.example .env
+nano .env  # Passe dein Model an
+
+# 4. Ollama Model laden
+ollama pull gpt-oss:20b
+
+# 5. Starten
+npm run satan
+```
+
+## Konfiguration
+
+### Environment Variables (.env)
+
+```bash
+# Ollama Configuration
+OLLAMA_URL=http://localhost:11434
+OLLAMA_MODEL=gpt-oss:20b      # Empfohlenes Model
+OLLAMA_TIMEOUT=30000
+
+# Logging
+LOG_LEVEL=info                # debug, info, warn, error
+LOG_PRETTY=true               # Pretty print in development
+NODE_ENV=development          # development or production
+
+# Server
+SERVER_NAME=say10
+SERVER_VERSION=1.0.0
+
+# Security
+REQUIRE_APPROVAL=true         # Approval für destructive Actions
+
+# Tools
+DEFAULT_LOG_LINES=50          # Standard Zeilen für read_syslog
+MAX_LOG_LINES=1000            # Maximum Zeilen
+```
+
+### System Prompt anpassen
+
+Der System Prompt kann in `cli/admin-cli.ts` angepasst werden:
+
+```typescript
+const systemPrompt = `Du bist ein zynischer, aber extrem kompetenter Linux-Systemadministrator...`;
+```
+
+Aktuell konfiguriert als:
+- Zynischer, professioneller Sysadmin
+- Kurze, präzise, technische Antworten
+- Selten subtile okkulte/schwarzhumorige Anspielungen
+- Effizienz vor Unterhaltung
+- Antworten immer auf Deutsch
+
+## Commands
+
+### Interactive Mode (Empfohlen)
+
+```bash
+# Satan Chat starten
+npm run satan
+
+# Alternativ
+npm run say10
+
+# Mit spezifischem Model
+npx tsx cli/admin-cli.ts chat --model mistral:latest
+```
+
+### Quick Commands
+
+```bash
+# System Status
+npm run satan status
+
+# Logs anzeigen
+npm run satan logs
+npm run satan logs --lines 100
+```
+
+### Development
+
+```bash
+# Dev Mode (CLI mit auto-reload)
+npm run dev:cli
+
+# MCP Server standalone
+npm start
+
+# Build
+npm run build
+
+# Tests
+npm test
+```
+
+## Sicherheit
 
 ### Mehrstufiges Sicherheitskonzept
 
@@ -159,72 +277,6 @@ Reason:  Destructive Action, Erfordert sudo/root
 ? Command ausführen? (Y/n)
 ```
 
-## 📦 Installation & Requirements
-
-### Voraussetzungen
-
-- **Node.js 18+** (v25.1.0 empfohlen)
-- **Ubuntu/Debian Linux**
-- **Ollama** mit einem Model (z.B. llama3.2:latest)
-
-### Setup
-
-```bash
-# 1. Repository klonen
-git clone <repo-url>
-cd spassprojekt-mcp
-
-# 2. Dependencies installieren
-npm install
-
-# 3. Build
-npm run build
-
-# 4. Ollama prüfen
-ollama list
-
-# 5. Starten!
-npm run admin
-```
-
-## 🎮 Commands
-
-### Interactive Mode
-
-```bash
-# Chat starten (empfohlen)
-npm run satan
-# oder
-npm run say10
-
-# Mit spezifischem Model
-npx tsx cli/admin-cli.ts chat --model mistral:latest
-```
-
-### Quick Commands
-
-```bash
-# Schneller System Status
-npm run satan status
-
-# Logs anzeigen
-npm run satan logs
-npm run satan logs -n 100
-```
-
-### Development
-
-```bash
-# Dev Mode (auto-reload)
-npm run dev:cli
-
-# MCP Server standalone
-npm start
-
-# Tests
-npm test
-```
-
 ## Architektur
 
 ```text
@@ -235,7 +287,7 @@ npm test
            │
            ▼
 ┌─────────────────────┐
-│   Ollama + MCP      │
+│   Ollama MCP        │
 │   Bridge            │
 └──────────┬──────────┘
            │
@@ -249,8 +301,8 @@ npm test
          ┌────────┼────────┐
          ▼        ▼        ▼
     ┌────────┬────────┬────────┐
-    │Monitoring│ Logs │Services│
-    │  Tools  │ Tools│  Tools │
+    │Monitor │  Logs  │Service │
+    │ Tools  │  Tools │ Tools  │
     └────────┴────────┴────────┘
                   │
                   ▼
@@ -261,92 +313,83 @@ npm test
          └────────────────┘
 ```
 
-## 🧪 Testing
+## Performance
 
-### Automated Tests
+### Performance Stats
+
+say10 zeigt Live-Performance Stats nach jeder Antwort:
+
+```text
+[PERF] 10.55 tokens/sec | 408 tokens | 44.1s total
+```
+
+- **tokens/sec:** Generierungsgeschwindigkeit
+- **tokens:** Anzahl generierte Tokens
+- **total:** Gesamtzeit in Sekunden
+
+### GPU Beschleunigung
+
+Für beste Performance NVIDIA GPU verwenden:
 
 ```bash
-# Auf Linux:
-./test.sh
+# NVIDIA Treiber installieren
+sudo apt install nvidia-dkms-550
 
-# Oder:
-npm test
+# GPU laden
+sudo modprobe nvidia
+
+# Prüfen
+nvidia-smi
 ```
 
-### Manual Testing
+Mit GPU: ~10-12 tokens/sec
+Ohne GPU (CPU only): ~2-3 tokens/sec
 
-Siehe [test-manual.md](test-manual.md) für eine komplette Test-Checklist.
+## Troubleshooting
 
-## 🔧 Konfiguration
-
-### Whitelist anpassen
-
-`config/whitelist.json`:
-
-```json
-{
-  "commands": [
-    "df", "free", "ps",
-    "dein-custom-command"
-  ],
-  "patterns": [
-    "^df\\s+",
-    "^ps\\s+"
-  ]
-}
-```
-
-**⚠️ ACHTUNG:** Nur read-only Commands whitelisten!
-
-### System Prompt anpassen
-
-`cli/admin-cli.ts`:
-
-```typescript
-const systemPrompt = `
-Du bist Claude, ein AI Server Administrator...
-[Deine Anpassungen]
-`;
-```
-
-## 🚀 Advanced Usage
-
-### Als MCP Server (für andere Clients)
-
+### Ollama läuft nicht
 ```bash
-npm start
+sudo systemctl status ollama
+sudo systemctl start ollama
 ```
 
-Der Server nutzt stdio Transport und kann von jedem MCP Client verwendet werden.
-
-### Integration mit Claude Desktop
-
-In `claude_desktop_config.json`:
-
-```json
-{
-  "mcpServers": {
-    "server-admin": {
-      "command": "node",
-      "args": ["/path/to/spassprojekt-mcp/dist/index.js"]
-    }
-  }
-}
+### Model nicht gefunden
+```bash
+ollama list
+ollama pull gpt-oss:20b
 ```
 
-## 📊 Use Cases
+### GPU wird nicht verwendet
+```bash
+nvidia-smi  # GPU Status prüfen
+sudo modprobe nvidia  # GPU Module laden
+sudo apt install nvidia-dkms-550  # Treiber installieren
+```
 
-- ✅ **Morning Health Check** - Täglich Server Status prüfen
-- ✅ **Error Monitoring** - Automatische Error-Analyse
-- ✅ **Service Management** - Services überwachen & neustarten
-- ✅ **Performance Debugging** - CPU/Memory Probleme finden
-- ✅ **Log Analysis** - Schnelle Log-Suche & Pattern-Erkennung
-- ✅ **Security Audits** - Failed logins & Security events prüfen
-- ✅ **Proactive Maintenance** - AI schlägt Optimierungen vor
+### RAM voll
+- Verwende kleineres Model (llama3.1:8b)
+- Stoppe andere Services
+- Füge Swap Space hinzu
 
-## 🎯 Roadmap
+## Use Cases
 
-Geplante Features:
+- **Morning Health Check** - Täglich Server Status prüfen
+- **Error Monitoring** - Automatische Error-Analyse aus Logs
+- **Service Management** - Services überwachen & neustarten
+- **Performance Debugging** - CPU/Memory Probleme identifizieren
+- **Log Analysis** - Schnelle Log-Suche & Pattern-Erkennung
+- **Security Audits** - Failed logins & Security events prüfen
+
+## Dokumentation
+
+- **[SETUP.md](SETUP.md)** - Detaillierte Installation & Konfiguration
+- **[FEATURES.md](FEATURES.md)** - Alle Features im Detail
+- **[QUICKSTART.md](QUICKSTART.md)** - In 5 Minuten loslegen
+- **[test-manual.md](test-manual.md)** - Test Guide für alle Features
+
+## Roadmap
+
+Mögliche zukünftige Features:
 
 - [ ] Docker Container Management
 - [ ] Database Health Checks
@@ -357,31 +400,34 @@ Geplante Features:
 - [ ] Backup Management
 - [ ] Package Update Management
 
-## 🤝 Contributing
+## Contributing
 
 Contributions sind willkommen!
 
 1. Fork das Repo
-2. Feature Branch erstellen
-3. Tests hinzufügen
-4. Pull Request öffnen
+2. Feature Branch erstellen (`git checkout -b feature/amazing`)
+3. Commits machen (`git commit -m 'Add amazing feature'`)
+4. Push zum Branch (`git push origin feature/amazing`)
+5. Pull Request öffnen
 
-## 📄 Lizenz
+## Lizenz
 
 MIT License
 
-## 🙏 Credits
-
-Basierend auf dem [System-Prompt](https://gist.github.com/...) für einen lokalen AI Server Admin.
+## Credits
 
 Gebaut mit:
 
-- [Model Context Protocol](https://modelcontextprotocol.io)
-- [Ollama](https://ollama.ai)
+- [Model Context Protocol (MCP)](https://modelcontextprotocol.io) - Tool Integration für LLMs
+- [Ollama](https://ollama.ai) - Lokales LLM Hosting
+- [systeminformation](https://systeminformation.io) - System Monitoring
+- [pino](https://getpino.io) - Strukturiertes Logging
 - TypeScript & Node.js
-
----
 
 ## Support
 
 Bei Fragen oder Problemen öffne ein Issue auf GitHub.
+
+---
+
+**Made with 🔥 for Linux Sysadmins**

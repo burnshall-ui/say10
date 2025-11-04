@@ -95,7 +95,7 @@ Der Server nutzt stdio Transport und kann von jedem MCP Client genutzt werden.
 ```
 Du: Wie geht es dem Server?
 
-AI: 🚀 Lass mich schnell den Server Status checken!
+AI: Lass mich schnell den Server Status checken!
     [AI nutzt: system_status]
     
     Alles sieht gut aus! 
@@ -127,16 +127,16 @@ Du: Starte nginx neu
 
 AI: [AI möchte: restart_service nginx]
 
-⚠️  Approval Required
+[WARNING] Approval Required
 ────────────────────────────────────────────────
 Command: sudo systemctl restart nginx
 Reason:  Destructive Action, Erfordert sudo/root
-⚠️  Dies ist eine DESTRUCTIVE Action!
-🔐 Erfordert sudo/root Rechte
+[WARN] Dies ist eine DESTRUCTIVE Action!
+[INFO] Erfordert sudo/root Rechte
 ────────────────────────────────────────────────
 ? Command ausführen? (Y/n) y
 
-AI: ✅ nginx wurde erfolgreich neugestartet!
+AI: nginx wurde erfolgreich neugestartet!
     Service läuft wieder.
 ```
 
@@ -263,11 +263,11 @@ console.log(result);
 
 ### Best Practices
 
-1. ✅ Whitelist nur read-only Commands
-2. ✅ Prüfe Commands vor Approval genau
-3. ✅ Teste auf Test-System zuerst
-4. ❌ NIEMALS automatisch approven ohne Review
-5. ❌ NIEMALS Whitelist mit destructive Commands
+1. Whitelist nur read-only Commands
+2. Prüfe Commands vor Approval genau
+3. Teste auf Test-System zuerst
+4. NIEMALS automatisch approven ohne Review
+5. NIEMALS Whitelist mit destructive Commands
 
 ## Support & Erweiterungen
 

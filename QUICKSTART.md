@@ -1,4 +1,4 @@
-# 😈 say10 - Quick Start
+# say10 - Quick Start
 
 ## 5-Minuten Setup
 
@@ -27,7 +27,7 @@ ollama pull mistral:latest
 npm run satan
 ```
 
-Das war's! Die Hölle ist los! 😈🔥
+Das war's! Die Hölle ist los!
 
 ---
 
@@ -83,7 +83,7 @@ npm run build
 Wenn die AI destructive Actions ausführen möchte (z.B. Service restart), wirst du gefragt:
 
 ```
-⚠️  Approval Required
+ Approval Required
 ────────────────────────────────────────────────
 Command: sudo systemctl restart nginx
 Reason:  Destructive Action, Erfordert sudo/root
@@ -117,9 +117,9 @@ npm install -g tsx
 
 ## Was als Nächstes?
 
-- 📖 Lies [SETUP.md](SETUP.md) für Details
-- 🧪 Teste alle Features mit [test-manual.md](test-manual.md)
-- ⚙️ Passe [config/whitelist.json](config/whitelist.json) an
+- Lies [SETUP.md](SETUP.md) für Details
+- Teste alle Features mit [test-manual.md](test-manual.md)
+- Passe [config/whitelist.json](config/whitelist.json) an
 
 ---
 
@@ -127,52 +127,52 @@ npm install -g tsx
 
 ```
 ╔════════════════════════════════════════╗
-║      😈 say10 - Server Admin 😈       ║
+║      say10 - Server Admin       ║
 ╚════════════════════════════════════════╝
 
-🔌 Verbinde mit MCP Server...
-😈 say10 MCP Server gestartet
-🔥 Bereit für Verbindungen...
-✅ Verbunden! 13 Tools verfügbar
-💬 Chat gestartet! (Tippe 'exit' zum Beenden)
+Verbinde mit MCP Server...
+say10 MCP Server gestartet
+Bereit für Verbindungen...
+Verbunden! 13 Tools verfügbar
+Chat gestartet! (Tippe 'exit' zum Beenden)
 
 ────────────────────────────────────────────────────────────
 
 Du: Wie geht es dem Server?
 
-😈 say10: 
-  🔧 AI möchte 1 Tool(s) nutzen...
+say10: 
+  AI möchte 1 Tool(s) nutzen...
   → Tool: system_status({})
 
 Hey! Lass mich schnell checken wie's dem Server geht...
 
-🚀 **System Status sieht gut aus!**
+**System Status sieht gut aus!**
 
 **System:**
 - OS: Ubuntu 22.04 LTS
 - Uptime: 5d 12h 34m
 
-**CPU:** ✅
+**CPU:** OK
 - Intel Core i7-9700K
 - 8 Cores @ 3.6 GHz
 - Load: 12.3%
 
-**Memory:** ✅
+**Memory:** OK
 - 6.2 GB / 16 GB (38%)
 
-**Disk:** ✅
+**Disk:** OK
 - /: 42 GB / 100 GB (42%)
 
-Alles läuft stabil! Keine Probleme gefunden. 👍
+Alles läuft stabil! Keine Probleme gefunden.
 
 ────────────────────────────────────────────────────────────
 
 Du: exit
 
-👋 Auf Wiedersehen!
+Auf Wiedersehen!
 
-🔌 MCP Server Verbindung getrennt
+MCP Server Verbindung getrennt
 ```
 
-Viel Spaß mit say10 - lass die Hölle los! 😈🔥
+Viel Spaß mit say10 - lass die Hölle los!
 

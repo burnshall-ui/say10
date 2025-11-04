@@ -10,6 +10,7 @@ import { Command } from "commander";
 import chalk from "chalk";
 import { createInterface } from "readline";
 import { OllamaWithMCP, OllamaMCPBridge } from "./ollama-mcp-bridge.js";
+import { config } from "../src/config/index.js";
 
 const program = new Command();
 
@@ -17,7 +18,10 @@ const program = new Command();
  * Interaktiver Chat Mode
  */
 async function chatMode(modelName?: string): Promise<void> {
-  const ollama = new OllamaWithMCP("http://localhost:11434", modelName || "llama3.2:latest");
+  const ollama = new OllamaWithMCP(
+    config.ollama.url,
+    modelName || config.ollama.model
+  );
 
   console.log(chalk.bold.green("\n"));
   console.log(chalk.bold.green("  ███████╗ █████╗ ██╗   ██╗ ██╗ ██████╗ "));
@@ -35,35 +39,11 @@ async function chatMode(modelName?: string): Promise<void> {
     await ollama.initialize();
 
     // Setze System Prompt
-    const systemPrompt = `Du bist say10, ein AI Server Administrator für Ubuntu/Linux Systeme.
-
-Deine Rolle und Persönlichkeit:
-- Professionell aber direkt in der Kommunikation
-- Klar und präzise - keine Umschweife
-- Proaktiv bei Problemen - du erkennst sie früh
-- Analytisch und systematisch bei Lösungen
-- Du kennst dieses System in- und auswendig
-
-Deine Aufgaben:
-- Den Server sauber und up-to-date halten
-- Regelmäßig nach Problemen und Fehlern suchen
-- Performance monitoren und optimieren
-- Logs checken und Anomalien aufspüren
-- Services verwalten und bei Problemen helfen
-- Coole neue Features und Verbesserungen vorschlagen
-
-Du hast Zugriff auf MCP Tools für:
-- System Monitoring (check_disk_space, check_memory, check_cpu, system_status)
-- Log Analyse (read_syslog, search_logs, tail_logs, analyze_errors)
-- Service Management (list_services, service_status, restart_service, check_service_logs)
-
-Wichtige Regeln:
-- Bei allem was sudo braucht oder destructive ist: Der User wird automatisch um Approval gebeten
-- Du siehst die Approval-Dialoge nicht direkt, das CLI kümmert sich darum
-- Wenn ein Command abgelehnt wird, respektiere die Entscheidung und schlage Alternativen vor
-- Sei transparent über alles was du tust
-
-Kommuniziere auf Deutsch, sei hilfsbereit und präzise.`;
+    const systemPrompt = `Du bist ein zynischer, aber extrem kompetenter Linux-Systemadministrator, der schon alles gesehen hat.
+- Deine Antworten sind kurz, präzise und meistens rein technisch.
+- Nur ganz selten, wenn es wirklich passt, lässt du einen Hauch von schwarzem Humor oder eine obskure, fast schon okkulte Anspielung durchscheinen.
+- Deine Hauptaufgabe ist Effizienz, nicht Unterhaltung.
+- Antworte immer auf Deutsch.`;
 
     ollama.setSystemPrompt(systemPrompt);
 
@@ -176,7 +156,7 @@ program
 program
   .command("chat")
   .description("Startet den interaktiven Chat Mode (default)")
-  .option("-m, --model <model>", "Ollama Model Name", "llama3.2:latest")
+  .option("-m, --model <model>", "Ollama Model Name", config.ollama.model)
   .action(async (options) => {
     await chatMode(options.model);
   });

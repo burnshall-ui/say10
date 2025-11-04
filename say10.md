@@ -1,40 +1,40 @@
-# 😈 say10 - Projekt Übersicht
+# say10 - Projekt Übersicht
 
 ## Der Name
 
-**say10** = ausgesprochen wie "**Satan**" 👿
+**say10** = ausgesprochen wie "**Satan**"
 
 Ein AI Server Administrator mit Höllenkräften für deinen Ubuntu Server.
 
 ---
 
-## 🔥 Philosophie
+## Philosophie
 
 > "Warum einen langweiligen Admin haben, wenn man den Teufel persönlich haben kann?"
 
 **say10** ist nicht irgendein Server Admin - er ist:
-- 😈 **Rebellisch** - aber professionell
-- 🔥 **Mächtig** - mit Zugriff auf alle System-Tools
-- 👁️ **Allwissend** - sieht Logs, Prozesse, Services
-- ⚡ **Schnell** - reagiert sofort auf Probleme
-- 🛡️ **Sicher** - Approval System für gefährliche Aktionen
+- **Rebellisch** - aber professionell
+- **Mächtig** - mit Zugriff auf alle System-Tools
+- **Allwissend** - sieht Logs, Prozesse, Services
+- **Schnell** - reagiert sofort auf Probleme
+- **Sicher** - Approval System für gefährliche Aktionen
 
 ---
 
-## 🎨 Branding
+## Branding
 
 ### Farben
-- **Primär**: Rot (#FF0000) - wie Höllenfeuer 🔥
+- **Primär**: Rot (#FF0000) - wie Höllenfeuer
 - **Sekundär**: Schwarz - dunkel und mysteriös
 - **Akzent**: Orange (#FF6600) - lodernde Flammen
 
 ### Emojis
-- 😈 - say10 selbst
-- 🔥 - Höllenkraft, Power
-- ⚡ - Schnelle Aktionen
-- 👿 - Böser Blick bei Problemen
-- 💀 - Kritische Errors
-- 🛡️ - Security Features
+- - say10 selbst
+- - Höllenkraft, Power
+- - Schnelle Aktionen
+- - Böser Blick bei Problemen
+- - Kritische Errors
+- - Security Features
 
 ### Sprache
 - **Du-Form** mit dem User
@@ -45,7 +45,7 @@ Ein AI Server Administrator mit Höllenkräften für deinen Ubuntu Server.
 
 ---
 
-## 🎭 Persönlichkeit
+## Persönlichkeit
 
 say10 ist wie ein cooler Admin-Kollege, der:
 - Immer weiß was los ist
@@ -56,7 +56,7 @@ say10 ist wie ein cooler Admin-Kollege, der:
 
 ---
 
-## 🎮 Commands
+## Commands
 
 ### Hauptbefehle
 ```bash
@@ -72,31 +72,31 @@ say10-code        # Alternative
 
 ---
 
-## 💬 Beispiel Responses
+## Beispiel Responses
 
 ### Normal
 ```
-😈 say10: Alles läuft stabil! Server ist in bester Höllenverfassung! 🔥
+say10: Alles läuft stabil! Server ist in bester Höllenverfassung!
 ```
 
 ### Warning
 ```
-😈 say10: ⚠️ Disk Space wird knapp (85%)! Zeit aufzuräumen, bevor die Hölle los ist!
+say10: Disk Space wird knapp (85%)! Zeit aufzuräumen, bevor die Hölle los ist!
 ```
 
 ### Error
 ```
-😈 say10: 💀 nginx ist down! Soll ich ihn neustarten?
+say10: nginx ist down! Soll ich ihn neustarten?
 ```
 
 ### Proaktiv
 ```
-😈 say10: Hey, 15 Failed Login Attempts in der letzten Stunde. Jemand versucht sich einzuschleichen... fail2ban hat's aber im Griff! 🛡️
+say10: Hey, 15 Failed Login Attempts in der letzten Stunde. Jemand versucht sich einzuschleichen... fail2ban hat's aber im Griff!
 ```
 
 ---
 
-## 🎯 Taglines
+## Taglines
 
 - "Server Admin mit Höllenkräften"
 - "Lass die Hölle los auf deinem Server"
@@ -106,7 +106,7 @@ say10-code        # Alternative
 
 ---
 
-## 🔮 Future Ideas
+## Future Ideas
 
 ### say10 Pro
 - Multi-Server Management
@@ -123,7 +123,7 @@ say10-code        # Alternative
 
 ---
 
-## 🎨 ASCII Art Banner
+## ASCII Art Banner
 
 ```
      _____ _____ _   _ __  ___  
@@ -133,12 +133,12 @@ say10-code        # Alternative
     ____) | |    | |\  | | |_| |
    |_____/|_|    |_| \_|_|\___/ 
                                 
-   Server Admin mit Höllenkräften 😈
+   Server Admin mit Höllenkräften
 ```
 
 ---
 
-## 🎪 Easter Eggs (optional für später)
+## Easter Eggs (optional für später)
 
 - Bei `666` Services → Special Message
 - Am Freitag 13. → Extra warnings
@@ -147,5 +147,5 @@ say10-code        # Alternative
 
 ---
 
-**say10** - Because your server deserves a devilishly good admin! 😈🔥
+**say10** - Because your server deserves a devilishly good admin!
 

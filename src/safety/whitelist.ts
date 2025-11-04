@@ -1,6 +1,6 @@
 /**
  * Whitelist Management
- * 
+ *
  * Verwaltet whitelisted Commands die ohne Approval ausgeführt werden können
  */
 
@@ -9,9 +9,12 @@ import { existsSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 import type { WhitelistConfig } from "../types.js";
+import { getLogger } from "../utils/logger.js";
+import { config } from "../config/index.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+const logger = getLogger('whitelist');
 
 let whitelistCache: WhitelistConfig | null = null;
 
@@ -24,20 +27,23 @@ export async function loadWhitelist(): Promise<WhitelistConfig> {
   }
 
   try {
-    // Versuche config/whitelist.json zu laden
-    const configPath = join(__dirname, "../../config/whitelist.json");
-    
+    // Verwende configPath aus Config oder Default
+    const configPath = config.security.whitelistPath;
+
     if (!existsSync(configPath)) {
-      console.error("⚠️ Whitelist Config nicht gefunden, verwende Default");
+      logger.warn({ path: configPath }, 'Whitelist config not found, using defaults');
       return getDefaultWhitelist();
     }
 
     const content = await readFile(configPath, "utf-8");
     whitelistCache = JSON.parse(content);
-    
+
+    if (whitelistCache) {
+      logger.info({ path: configPath, commandCount: whitelistCache.commands.length }, 'Whitelist loaded');
+    }
     return whitelistCache!;
   } catch (error) {
-    console.error("⚠️ Fehler beim Laden der Whitelist:", error);
+    logger.error({ error }, 'Failed to load whitelist, using defaults');
     return getDefaultWhitelist();
   }
 }
@@ -106,7 +112,7 @@ export async function isWhitelisted(command: string): Promise<boolean> {
         return true;
       }
     } catch (e) {
-      console.error(`⚠️ Ungültiges Regex Pattern: ${pattern}`);
+      logger.warn({ pattern, error: e }, 'Invalid regex pattern in whitelist');
     }
   }
   

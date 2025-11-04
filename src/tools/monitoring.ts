@@ -139,11 +139,13 @@ async function checkMemory(): Promise<{ content: Array<{ type: string; text: str
     const swapPercent = mem.swaptotal > 0 ? ((mem.swapused / mem.swaptotal) * 100).toFixed(1) : "0.0";
     
     let output = `${status} Memory Status\n\n`;
-    output += `RAM:\n`;
-    output += `- Total: ${totalGB} GB\n`;
-    output += `- Genutzt: ${usedGB} GB (${usedPercent}%)\n`;
-    output += `- Frei: ${freeGB} GB\n`;
-    output += `- Verfügbar: ${availableGB} GB\n\n`;
+    output += `RAM: ${availableGB} GB verfügbar von ${totalGB} GB total\n`;
+    output += `Genutzt: ${usedGB} GB (${usedPercent}%)\n\n`;
+    output += `Details:\n`;
+    output += `- Total RAM: ${totalGB} GB\n`;
+    output += `- In Nutzung: ${usedGB} GB\n`;
+    output += `- Frei (unused): ${freeGB} GB\n`;
+    output += `- Verfügbar (usable): ${availableGB} GB\n\n`;
     
     if (mem.swaptotal > 0) {
       output += `Swap:\n`;

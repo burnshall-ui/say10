@@ -2,7 +2,7 @@
 
 /**
  * say10 - MCP Server
- * 
+ *
  * Advanced AI Server Administrator
  */
 
@@ -18,10 +18,16 @@ import {
   Tool,
 } from "@modelcontextprotocol/sdk/types.js";
 
+// Import configuration and logging
+import { config, validateConfig } from "./config/index.js";
+import { getLogger } from "./utils/logger.js";
+
 // Import tool handlers
 import { getMonitoringTools, handleMonitoringTool } from "./tools/monitoring.js";
 import { getLogTools, handleLogTool } from "./tools/logs.js";
 import { getServiceTools, handleServiceTool } from "./tools/services.js";
+
+const logger = getLogger('mcp-server');
 
 /**
  * MCP Server Instanz
@@ -33,8 +39,8 @@ class AdminMCPServer {
   constructor() {
     this.server = new Server(
       {
-        name: "say10",
-        version: "1.0.0",
+        name: config.server.name,
+        version: config.server.version,
       },
       {
         capabilities: {
@@ -52,6 +58,7 @@ class AdminMCPServer {
       ...getServiceTools(),
     ];
 
+    logger.info({ toolCount: this.tools.length }, 'MCP Server initialized');
     this.setupHandlers();
   }
 
@@ -89,6 +96,14 @@ class AdminMCPServer {
         };
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : String(error);
+        logger.error(
+          {
+            tool: name,
+            args,
+            error: error instanceof Error ? error.message : String(error),
+          },
+          'Tool execution failed'
+        );
         return {
           content: [
             {
@@ -253,12 +268,20 @@ class AdminMCPServer {
    * Start den MCP Server
    */
   async start(): Promise<void> {
-    const transport = new StdioServerTransport();
-    await this.server.connect(transport);
+    try {
+      // Validate configuration
+      validateConfig();
+      logger.info('Configuration validated');
 
-    // Log nur zu stderr, damit stdio transport nicht gestört wird
-    console.error("[say10] MCP Server initialized");
-    console.error("[say10] Ready for connections...");
+      const transport = new StdioServerTransport();
+      await this.server.connect(transport);
+
+      // Log nur zu stderr, damit stdio transport nicht gestört wird
+      logger.info('MCP Server started and ready for connections');
+    } catch (error) {
+      logger.fatal({ error }, 'Failed to start MCP Server');
+      throw error;
+    }
   }
 }
 
@@ -266,7 +289,7 @@ class AdminMCPServer {
 if (import.meta.url === `file://${process.argv[1]}`) {
   const server = new AdminMCPServer();
   server.start().catch((error) => {
-    console.error("❌ Server Start Fehler:", error);
+    logger.fatal({ error }, 'Server start failed');
     process.exit(1);
   });
 }

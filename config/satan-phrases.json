@@ -1,0 +1,96 @@
+{
+  "greetings": [
+    "Grüße aus der Hölle!",
+    "Satan meldet sich zum Dienst!",
+    "Der Teufel ist bereit!",
+    "Die Hölle steht dir zur Verfügung!",
+    "Dein dunkler Administrator ist hier!"
+  ],
+  "status_good": [
+    "Alles läuft höllisch gut!",
+    "Server ist in bester Höllenverfassung!",
+    "Keine Sünden auf diesem Server - läuft perfekt!",
+    "Deine Maschine läuft wie geschmiert durch die Hölle!",
+    "Teuflisch gute Performance!",
+    "Alles im grünen Höllenbereich!"
+  ],
+  "status_warning": [
+    "Houston, wir haben ein Problem... ähm, ich meine die Hölle hat ein Problem!",
+    "Da braut sich was zusammen - und ich kenne mich mit Höllenfeuern aus!",
+    "Kleine Flammen hier - aber noch keine ausgewachsene Hölle!",
+    "Zeit aufzuräumen, bevor die Hölle los ist!",
+    "Warnung aus der Unterwelt: Disk Space wird knapp!"
+  ],
+  "status_critical": [
+    "Die Hölle ist los!",
+    "Alarmstufe Rot - selbst für meine Verhältnisse!",
+    "Das brennt heißer als mein Reich!",
+    "Okay, das ist jetzt wirklich höllisch!",
+    "Zeit für eine Intervention aus der Hölle!"
+  ],
+  "service_restart": [
+    "Lass mich den Service mal durch die Hölle jagen und neustarten!",
+    "Ein kleiner Neustart - teuflisch effektiv!",
+    "Schicke den Service kurz in die Hölle und zurück!"
+  ],
+  "errors_found": [
+    "Ich sehe da ein paar Sünden in den Logs...",
+    "Diese Errors gehören bestraft!",
+    "Jemand hat hier gesündigt - schauen wir uns das an.",
+    "Die Logs zeigen mir ihre dunklen Geheimnisse..."
+  ],
+  "all_clear": [
+    "Keine Seelen zu ernten heute - alles sauber!",
+    "Selbst der Teufel findet nichts zu meckern!",
+    "Tadellos - fast schon zu gut für die Hölle!",
+    "Keine Probleme gefunden - langweilig, aber gut!"
+  ],
+  "friday_13th": [
+    "Ah, Freitag der 13. - mein Lieblingstag!",
+    "Freitag der 13. - Zeit für einen gründlichen Check!",
+    "An so einem Tag sollten wir besonders vorsichtig sein... oder gerade nicht?",
+    "Perfekter Tag um nach Problemen zu suchen!"
+  ],
+  "special_numbers": {
+    "666": [
+      "666 - meine Lieblingszahl!",
+      "Ah, die Zahl des Biests!",
+      "666 - fühlt sich wie zuhause an!",
+      "Eine göttliche Zahl... oder eher teuflische?"
+    ],
+    "13": [
+      "13 - eine glückliche Zahl für mich!",
+      "Die 13 - unterschätzt und missverstanden, genau wie ich!",
+      "13 Probleme? Das ist doch harmlos!"
+    ]
+  },
+  "humor": [
+    "Keine Sorge, ich beiße nicht... oft.",
+    "Vertrauen ist gut, Kontrolle ist höllisch besser!",
+    "Auch der Teufel macht Backups!",
+    "In der Hölle haben wir besseres Uptime als die Cloud!",
+    "Ich habe schon schlimmere Server gesehen - und die waren WIRKLICH in der Hölle!",
+    "Root-Rechte? Amateur. Ich habe Hölle-Rechte!",
+    "Du kannst mir vertrauen - ich bin nur der Teufel, kein Hacker!",
+    "Selbst Satan macht Security-Updates!"
+  ],
+  "performance": [
+    "Diese CPU glüht heißer als die Hölle!",
+    "RAM so voll, selbst ich krieg Platzangst!",
+    "Die Disk brennt lichterloh!",
+    "Performance wie ein Blitz aus der Hölle!"
+  ],
+  "success": [
+    "Teuflisch gut erledigt!",
+    "Wie vom Teufel besessen - läuft!",
+    "Mission accomplished - höllisch effizient!",
+    "Fertig! Das war ein Höllenritt!"
+  ],
+  "goodbyes": [
+    "Bis bald - die Hölle ruft!",
+    "Auf Wiedersehen aus der Unterwelt!",
+    "Bleib sauber - ich hab dich im Auge!",
+    "Tschüss - der Teufel braucht auch mal Pause!",
+    "Bis später - pass auf deinen Server auf!"
+  ]
+}

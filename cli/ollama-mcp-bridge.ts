@@ -1,6 +1,6 @@
 /**
  * say10 - Ollama MCP Bridge
- * 
+ *
  * Verbindet Ollama mit dem MCP Server und übersetzt Tool Calls
  */
 
@@ -10,6 +10,19 @@ import chalk from "chalk";
 import { setApprovalHandler } from "../src/safety/approval.js";
 import type { ApprovalRequest } from "../src/types.js";
 import inquirer from "inquirer";
+import { config } from "../src/config/index.js";
+
+/**
+ * Zeige Performance Stats
+ */
+function showPerformanceStats(data: OllamaResponse) {
+  if (data.eval_count && data.eval_duration) {
+    const tokensPerSec = (data.eval_count / (data.eval_duration / 1e9)).toFixed(2);
+    const totalSec = data.total_duration ? (data.total_duration / 1e9).toFixed(1) : 'N/A';
+
+    console.log(chalk.gray(`\n  [PERF] ${tokensPerSec} tokens/sec | ${data.eval_count} tokens | ${totalSec}s total`));
+  }
+}
 
 /**
  * Ollama API Response Types
@@ -28,6 +41,11 @@ interface OllamaMessage {
 interface OllamaResponse {
   message: OllamaMessage;
   done?: boolean;
+  eval_count?: number;
+  eval_duration?: number;
+  prompt_eval_count?: number;
+  prompt_eval_duration?: number;
+  total_duration?: number;
 }
 
 /**
@@ -86,7 +104,7 @@ export class OllamaMCPBridge {
       const response = await this.client.listTools();
       this.tools = response.tools || [];
     } catch (error) {
-      console.error(chalk.red("❌ Fehler beim Laden der Tools:"), error);
+      console.error(chalk.red("[ERROR] Fehler beim Laden der Tools:"), error);
       this.tools = [];
     }
   }
@@ -166,7 +184,10 @@ export class OllamaWithMCP {
   private bridge: OllamaMCPBridge;
   private conversationHistory: Array<{ role: string; content: string; tool_calls?: any }> = [];
 
-  constructor(baseUrl = "http://localhost:11434", model = "llama3.2:latest") {
+  constructor(
+    baseUrl = config.ollama.url,
+    model = config.ollama.model
+  ) {
     this.baseUrl = baseUrl;
     this.model = model;
     this.bridge = new OllamaMCPBridge();
@@ -305,6 +326,9 @@ export class OllamaWithMCP {
           content: finalMessage,
         });
 
+        // Zeige Performance Stats
+        showPerformanceStats(finalData);
+
         return finalMessage;
       } else {
         // Normale Antwort ohne Tool Calls
@@ -314,6 +338,9 @@ export class OllamaWithMCP {
           role: "assistant",
           content: assistantMessage,
         });
+
+        // Zeige Performance Stats
+        showPerformanceStats(data);
 
         return assistantMessage;
       }
