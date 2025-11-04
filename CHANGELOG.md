@@ -1,5 +1,37 @@
 # Changelog
 
+## [1.1.0] - 2025-11-04
+
+### 🆕 New Features
+
+**Network Diagnostics Tools** - Komplett neue Tool-Kategorie!
+
+- ✅ `check_ports` - Zeigt alle offenen Ports und lauschende Services
+- ✅ `check_connections` - Aktive Netzwerk-Verbindungen mit Remote-IP & Status
+- ✅ `network_traffic` - Interface-Statistiken (RX/TX Bytes, Packets, Errors)
+- ✅ `dns_lookup` - DNS Resolution Testing (A, AAAA, MX, NS, TXT Records)
+- ✅ `ping_host` - Konnektivität & Latency Testing mit Packet Loss
+- ✅ `check_firewall` - Firewall Status & Rules (ufw/iptables)
+- ✅ `traceroute` - Netzwerk-Pfad Verfolgung zu einem Host
+
+### 📝 Changes
+
+- Whitelist erweitert mit Network-Commands (ss, ip, dig, ping, traceroute)
+- README.md aktualisiert mit Network Tools Section
+- FEATURES.md erweitert mit Network Diagnostics Workflow-Beispielen
+- MCP Tool Routing optimiert für bessere Performance
+
+### 🎯 Use Cases
+
+- Port-Konflikte identifizieren
+- Netzwerk-Konnektivität testen
+- DNS-Probleme debuggen
+- Firewall-Regeln überprüfen
+- Performance-Probleme aufspüren
+- Routing-Probleme diagnostizieren
+
+---
+
 ## [1.0.0] - 2025-11-04
 
 ### Aktueller Stand

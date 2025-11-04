@@ -13,6 +13,7 @@ A complete MCP (Model Context Protocol) Server that gives your Linux Server an A
 ## Highlights
 
 - **System Monitoring** - CPU, Memory, Disk Space mit intelligenter Analyse
+- **Network Diagnostics** - Ports, Connections, Traffic, DNS, Ping, Firewall
 - **Log Analysis** - Automatische Error Detection & Pattern Recognition
 - **Service Management** - systemd Service Control mit Safety Guards
 - **Security First** - Approval System für destructive Actions
@@ -145,6 +146,18 @@ Du: exit
 | `restart_service` | Service Restart (mit Approval) |
 | `enable_service` | Autostart aktivieren (mit Approval) |
 | `check_service_logs` | Service-spezifische Logs |
+
+### Network Diagnostics Tools
+
+| Tool | Beschreibung |
+|------|--------------|
+| `check_ports` | Zeigt alle offenen Ports und lauschende Services |
+| `check_connections` | Aktive Netzwerk-Verbindungen mit Remote-IP & Status |
+| `network_traffic` | Interface-Statistiken (RX/TX Bytes, Packets, Errors) |
+| `dns_lookup` | DNS Resolution Testing (A, AAAA, MX, NS, TXT Records) |
+| `ping_host` | Konnektivität & Latency Testing |
+| `check_firewall` | Firewall Status & Rules (ufw/iptables) |
+| `traceroute` | Netzwerk-Pfad Verfolgung zu einem Host |
 
 ## Installation & Setup
 

@@ -78,7 +78,41 @@ AI: [nutzt list_services Tool mit filter=failed]
 
 ---
 
-### 4. Sicherheitssystem
+### 4. Network Diagnostics
+
+**Tools:**
+- `check_ports` - Zeigt alle offenen Ports und lauschende Services
+- `check_connections` - Aktive Netzwerk-Verbindungen mit Remote-IP & Status
+- `network_traffic` - Interface-Statistiken (RX/TX Bytes, Packets, Errors)
+- `dns_lookup` - DNS Resolution Testing (A, AAAA, MX, NS, TXT Records)
+- `ping_host` - Konnektivität & Latency Testing mit Packet Loss
+- `check_firewall` - Firewall Status & Rules (ufw/iptables)
+- `traceroute` - Netzwerk-Pfad Verfolgung zu einem Host
+
+**Use Cases:**
+- Port-Konflikte identifizieren
+- Netzwerk-Konnektivität testen
+- DNS-Probleme debuggen
+- Firewall-Regeln überprüfen
+- Performance-Probleme aufspüren
+- Routing-Probleme diagnostizieren
+
+**Beispiel:**
+```
+Du: Warum kann ich mein Service nicht erreichen?
+AI: [nutzt check_ports Tool]
+    Port 80 ist geschlossen
+
+    [check_firewall Tool]
+    Firewall blockiert Port 80
+
+    Empfehlung: Öffne Port 80 in der Firewall:
+    sudo ufw allow 80/tcp
+```
+
+---
+
+### 5. Sicherheitssystem
 
 **Komponenten:**
 
@@ -117,7 +151,7 @@ Reason:  Destructive Action, Erfordert sudo
 
 ---
 
-### 5. Terminal CLI
+### 6. Terminal CLI
 
 **Modi:**
 
@@ -143,7 +177,7 @@ npm run admin logs       # Schneller Log-View
 
 ---
 
-### 6. MCP Resources
+### 7. MCP Resources
 
 Der Server bietet auch MCP Resources an:
 
@@ -155,7 +189,7 @@ Diese können von MCP Clients abonniert werden für Live-Updates.
 
 ---
 
-### 7. MCP Prompts
+### 8. MCP Prompts
 
 Vordefinierte Prompts für häufige Tasks:
 
@@ -239,6 +273,34 @@ AI: Starte Security Audit...
     - Failed logins sind normal (Bots)
     - fail2ban blockt diese automatisch
     - Firewall ist korrekt konfiguriert
+```
+
+---
+
+### Network Troubleshooting
+
+```
+Du: Mein nginx ist nicht von außen erreichbar
+
+AI: Lass mich das Netzwerk checken...
+    [check_ports]
+    Port 80 ist LISTEN (nginx)
+    Port 443 ist LISTEN (nginx)
+
+    [check_firewall]
+    UFW Status: Active
+    Port 80: BLOCKED
+    Port 443: BLOCKED
+
+    Problem gefunden!
+    Die Firewall blockiert HTTP/HTTPS Traffic.
+
+    [dns_lookup deine-domain.com]
+    DNS zeigt auf: 192.168.2.150
+
+    Empfehlung: Öffne Firewall-Ports:
+    sudo ufw allow 80/tcp
+    sudo ufw allow 443/tcp
 ```
 
 ---
@@ -351,6 +413,7 @@ Du bist ein AI Administrator...
 
 ## Future Features (Roadmap)
 
+- ✅ Network Diagnostics - **COMPLETED**
 - Docker Container Management
 - Database Health Checks (PostgreSQL, MySQL, Redis)
 - Prometheus Metrics Export

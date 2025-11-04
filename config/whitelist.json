@@ -17,7 +17,12 @@
     "pwd",
     "whoami",
     "date",
-    "uname"
+    "uname",
+    "ss",
+    "ip",
+    "dig",
+    "ping",
+    "traceroute"
   ],
   "patterns": [
     "^df\\s+",
@@ -28,7 +33,12 @@
     "^journalctl\\s+",
     "^cat\\s+/var/log/",
     "^tail\\s+",
-    "^grep\\s+"
+    "^grep\\s+",
+    "^ss\\s+",
+    "^ip\\s+",
+    "^dig\\s+",
+    "^ping\\s+",
+    "^traceroute\\s+"
   ]
 }
 

@@ -26,6 +26,7 @@ import { getLogger } from "./utils/logger.js";
 import { getMonitoringTools, handleMonitoringTool } from "./tools/monitoring.js";
 import { getLogTools, handleLogTool } from "./tools/logs.js";
 import { getServiceTools, handleServiceTool } from "./tools/services.js";
+import { getNetworkTools, handleNetworkTool } from "./tools/network.js";
 
 const logger = getLogger('mcp-server');
 
@@ -56,6 +57,7 @@ class AdminMCPServer {
       ...getMonitoringTools(),
       ...getLogTools(),
       ...getServiceTools(),
+      ...getNetworkTools(),
     ];
 
     logger.info({ toolCount: this.tools.length }, 'MCP Server initialized');
@@ -77,7 +79,18 @@ class AdminMCPServer {
 
       try {
         // Route zu entsprechendem Tool Handler
-        if (name.startsWith("check_") || name === "system_status") {
+        // Check Network Tools first (bevor check_* pattern)
+        if (
+          name === "check_ports" ||
+          name === "check_connections" ||
+          name === "network_traffic" ||
+          name === "dns_lookup" ||
+          name === "ping_host" ||
+          name === "check_firewall" ||
+          name === "traceroute"
+        ) {
+          return await handleNetworkTool(name, args || {});
+        } else if (name.startsWith("check_") || name === "system_status") {
           return await handleMonitoringTool(name, args || {});
         } else if (name.includes("log")) {
           return await handleLogTool(name, args || {});
