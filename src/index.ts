@@ -31,6 +31,7 @@ import { getDockerTools, handleDockerTool } from "./tools/docker.js";
 import { getHistoryTools, handleHistoryTool } from "./tools/history.js";
 import { getAchievementTools, handleAchievementTool } from "./tools/achievements.js";
 import { getPythonTools, handlePythonTool } from "./tools/python.js";
+import { getFileTools, handleFileTool } from "./tools/files.js";
 
 const logger = getLogger('mcp-server');
 
@@ -66,6 +67,7 @@ class AdminMCPServer {
       ...getHistoryTools(),
       ...getAchievementTools(),
       ...getPythonTools(),
+      ...getFileTools(),
     ];
 
     logger.info({ toolCount: this.tools.length }, 'MCP Server initialized');
@@ -102,6 +104,17 @@ class AdminMCPServer {
         // Check Python Tools
         else if (name.startsWith("python_")) {
           return await handlePythonTool(name, args || {});
+        }
+        // Check File Tools
+        else if (
+          name === "read_file" ||
+          name === "list_directory" ||
+          name === "search_files" ||
+          name === "get_file_info" ||
+          name === "find_in_files" ||
+          name === "get_current_directory"
+        ) {
+          return await handleFileTool(name, args || {});
         }
         // Check Network Tools (bevor check_* pattern)
         else if (
