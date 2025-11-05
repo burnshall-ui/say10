@@ -24,7 +24,6 @@ function showPerformanceStats(data: OllamaResponse) {
     const tokensPerSec = (data.eval_count / (data.eval_duration / 1e9)).toFixed(2);
     const totalSec = data.total_duration ? (data.total_duration / 1e9).toFixed(1) : 'N/A';
 
-    console.log("");
     console.log(chalk.red.dim("  [") + chalk.red.bold("PERF") + chalk.red.dim("]") +
       chalk.gray(` ${tokensPerSec} tokens/sec `) + chalk.red.dim("│") +
       chalk.gray(` ${data.eval_count} tokens `) + chalk.red.dim("│") +
