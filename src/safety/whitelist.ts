@@ -107,6 +107,12 @@ export async function isWhitelisted(command: string): Promise<boolean> {
   // Pattern Match
   for (const pattern of whitelist.patterns) {
     try {
+      // Validate pattern length to prevent ReDoS
+      if (pattern.length > 200) {
+        logger.warn({ pattern: pattern.substring(0, 50) + '...' }, 'Pattern too long, skipping');
+        continue;
+      }
+      
       const regex = new RegExp(pattern);
       if (regex.test(cmd)) {
         return true;

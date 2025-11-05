@@ -84,22 +84,43 @@ export function validateConfig() {
 
   // Validate Ollama URL
   try {
-    new URL(config.ollama.url);
+    const url = new URL(config.ollama.url);
+    // Prüfe ob URL schema http/https ist
+    if (!['http:', 'https:'].includes(url.protocol)) {
+      errors.push(`Invalid OLLAMA_URL protocol: ${url.protocol}. Must be http: or https:`);
+    }
   } catch (e) {
     errors.push(`Invalid OLLAMA_URL: ${config.ollama.url}`);
   }
 
-  // Validate numeric values
-  if (config.ollama.timeout < 0) {
-    errors.push(`Invalid OLLAMA_TIMEOUT: ${config.ollama.timeout}`);
+  // Validate numeric values mit sinnvollen Grenzen
+  if (config.ollama.timeout < 1000 || config.ollama.timeout > 300000) {
+    errors.push(`Invalid OLLAMA_TIMEOUT: ${config.ollama.timeout}. Must be between 1000 and 300000 ms`);
   }
 
-  if (config.tools.defaultLogLines < 0) {
-    errors.push(`Invalid DEFAULT_LOG_LINES: ${config.tools.defaultLogLines}`);
+  if (config.tools.defaultLogLines < 1 || config.tools.defaultLogLines > config.tools.maxLogLines) {
+    errors.push(`Invalid DEFAULT_LOG_LINES: ${config.tools.defaultLogLines}. Must be between 1 and MAX_LOG_LINES`);
   }
 
-  if (config.tools.maxLogLines < 0) {
-    errors.push(`Invalid MAX_LOG_LINES: ${config.tools.maxLogLines}`);
+  if (config.tools.maxLogLines < 1 || config.tools.maxLogLines > 10000) {
+    errors.push(`Invalid MAX_LOG_LINES: ${config.tools.maxLogLines}. Must be between 1 and 10000`);
+  }
+  
+  // Validate Log Level
+  const validLogLevels = ['trace', 'debug', 'info', 'warn', 'error', 'fatal'];
+  if (!validLogLevels.includes(config.logging.level)) {
+    errors.push(`Invalid LOG_LEVEL: ${config.logging.level}. Must be one of: ${validLogLevels.join(', ')}`);
+  }
+  
+  // Validate Whitelist Path (nur prüfen, nicht ob existiert - könnte erst zur Runtime erstellt werden)
+  if (!config.security.whitelistPath || typeof config.security.whitelistPath !== 'string') {
+    errors.push(`Invalid WHITELIST_PATH: ${config.security.whitelistPath}`);
+  }
+  
+  // Validate Environment
+  const validEnvs = ['development', 'production', 'test'];
+  if (!validEnvs.includes(config.env)) {
+    console.warn(`Warning: Unusual NODE_ENV value: ${config.env}. Expected: ${validEnvs.join(', ')}`);
   }
 
   if (errors.length > 0) {

@@ -1,6 +1,6 @@
 {
   "name": "say10",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "say10 - Advanced AI Server Administrator",
   "type": "module",
   "main": "dist/index.js",
@@ -11,14 +11,19 @@
   "scripts": {
     "dev": "tsx src/index.ts",
     "dev:cli": "tsx cli/admin-cli.ts",
+    "dev:api": "tsx cli/api-server.ts",
     "build": "tsc",
     "prepare": "npm run build",
     "start": "node dist/index.js",
+    "api": "node dist/cli/api-server.js",
     "satan": "tsx cli/admin-cli.ts chat",
     "say10": "tsx cli/admin-cli.ts chat",
     "install-global": "npm run build && npm link",
     "uninstall-global": "npm unlink -g",
-    "test": "bash test.sh"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:manual": "bash test.sh"
   },
   "keywords": [
     "mcp",
@@ -32,19 +37,24 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@fastify/cors": "^11.1.0",
+    "@fastify/rate-limit": "^10.3.0",
     "@modelcontextprotocol/sdk": "^1.0.4",
     "chalk": "^5.3.0",
     "commander": "^12.1.0",
     "dotenv": "^17.2.3",
     "execa": "^9.5.2",
+    "fastify": "^5.6.1",
     "inquirer": "^12.2.0",
     "pino": "^10.1.0",
     "systeminformation": "^5.23.5"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",
+    "@vitest/coverage-v8": "^2.1.9",
     "pino-pretty": "^13.1.2",
     "tsx": "^4.19.2",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.9"
   }
 }

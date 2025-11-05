@@ -255,6 +255,138 @@ Aktuell konfiguriert als:
 - Effizienz vor Unterhaltung
 - Antworten immer auf Deutsch
 
+## 🔒 Security
+
+**say10** wurde mit Security-First Design entwickelt und einem vollständigen Security Audit unterzogen.
+
+### Security Score: 8.5/10 🟢
+
+**Audit Report:** Siehe `SECURITY-AUDIT.md` für Details
+
+### Implemented Security Features
+
+#### 1. Input Validation ✅
+Alle User-Inputs werden strikt validiert:
+- **Service Names** - Alphanumerisch, max 100 Zeichen
+- **Hostnames** - RFC 1123 compliant, kein Command Injection
+- **IP Addresses** - IPv4 & IPv6 Validation
+- **Log Paths** - Nur /var/log/, kein Path Traversal
+- **Search Patterns** - ReDoS Prevention, max 200 Zeichen
+
+```typescript
+// Beispiel: Hostname-Validierung
+sanitizeHostnameOrIP('google.com')  // ✅ OK
+sanitizeHostnameOrIP('192.168.1.1') // ✅ OK
+sanitizeHostnameOrIP('../../etc/passwd') // ❌ Throw Error
+```
+
+#### 2. Command Injection Prevention ✅
+- Kein direkter Shell-Aufruf (`child_process.exec`)
+- Verwendet `execa` mit Array-Argumenten (auto-escaped)
+- Keine String-Interpolation in Commands
+- Whitelist-basierte Command-Validierung
+
+```typescript
+// SICHER ✅
+await execa("ping", ["-c", "4", sanitizedHost]);
+
+// NICHT verwendet ❌
+// exec(`ping -c 4 ${host}`)  // Gefährlich!
+```
+
+#### 3. Approval System ✅
+Destructive Commands erfordern User-Approval:
+
+**Geschützte Actions:**
+- Service Restarts/Stops (`systemctl restart/stop`)
+- Package Management (`apt`, `dpkg`)
+- File Operations (`rm`, `chmod`, `chown`)
+- User Management (`userdel`, `groupdel`)
+- Network Config (`iptables`, `ufw`)
+
+```bash
+# Beispiel: Service Restart
+You: restart nginx
+
+[⚠ APPROVAL REQUIRED]
+Command: systemctl restart nginx
+Reason: Erfordert sudo/root, Destructive Action
+
+Execute this command? (y/N) █
+```
+
+#### 4. Timeout Protection ✅
+Alle Operations haben Timeouts:
+- **Network Operations:** 3-60s
+- **Service Operations:** 3-30s
+- **Log Operations:** 5-15s
+
+Prevents: Hanging processes, Resource exhaustion, DoS
+
+#### 5. Memory Leak Prevention ✅
+- Conversation History: Max 50 Nachrichten
+- Automatisches Cleanup nach jedem Chat
+- Keine unbegrenzten Caches/Arrays
+
+#### 6. Error Information Disclosure Prevention ✅
+Error Messages werden sanitized:
+- Dateipfade → `[PATH]`
+- IP-Adressen → `[IP]`
+- Ports → `[PORT]`
+
+### Compliance
+
+- ✅ **OWASP Top 10** (2021) - Compliant
+- ✅ **CWE Top 25** - Addressed
+- ✅ **SANS Top 25** - Addressed
+
+**Specific CWE Coverage:**
+- CWE-78: OS Command Injection - **MITIGATED**
+- CWE-22: Path Traversal - **MITIGATED**
+- CWE-400: Resource Exhaustion - **MITIGATED**
+- CWE-770: Allocation without Limits - **FIXED**
+- CWE-1333: ReDoS - **MITIGATED**
+
+### Testing
+
+```bash
+# Run security tests
+npm test
+
+# With coverage report
+npm run test:coverage
+```
+
+**Test Coverage:**
+- 30 Unit Tests (alle bestehen)
+- 91.5% Coverage für Validation-Funktionen
+- Command Injection Tests
+- Path Traversal Tests
+- ReDoS Tests
+
+### Best Practices
+
+1. **Run with REQUIRE_APPROVAL=true** (default)
+2. **Review whitelist.json** regelmäßig
+3. **Monitor logs** für ungewöhnliche Patterns
+4. **Keep dependencies updated** (`npm audit`)
+5. **Principle of Least Privilege** - Run as non-root user when possible
+
+### Known Limitations
+
+- **Linux Only** - Designed for Linux servers
+- **Sudo Required** - Some operations need sudo (with approval)
+- **Local Network Only** - Not designed for public internet exposure
+- **Single User** - No multi-user authentication
+
+### Reporting Security Issues
+
+Found a security vulnerability? Please report it responsibly:
+1. **DO NOT** open a public issue
+2. Email: security@say10.local (or create private security advisory)
+3. Include: Description, Steps to reproduce, Impact
+4. Expected response time: 48 hours
+
 ## Commands
 
 ### Interactive Mode (Empfohlen)

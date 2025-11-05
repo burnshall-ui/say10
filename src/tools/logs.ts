@@ -128,7 +128,9 @@ async function readSyslog(
       args.push("-p", priority);
     }
     
-    const { stdout } = await execa("journalctl", args);
+    const { stdout } = await execa("journalctl", args, {
+      timeout: 10000, // 10 Sekunden
+    });
     
     let output = `[LOG] System Logs (letzte ${lines} Einträge)\n\n`;
     
@@ -147,7 +149,9 @@ async function readSyslog(
     // Fallback: Versuche /var/log/syslog zu lesen
     if (existsSync("/var/log/syslog")) {
       try {
-        const { stdout } = await execa("tail", ["-n", String(lines), "/var/log/syslog"]);
+        const { stdout } = await execa("tail", ["-n", String(lines), "/var/log/syslog"], {
+          timeout: 5000, // 5 Sekunden
+        });
         let output = `[LOG] System Logs (letzte ${lines} Einträge aus /var/log/syslog)\n\n`;
         output += "```\n";
         output += stdout;
@@ -170,10 +174,10 @@ async function searchLogs(
   pattern: string,
   lines: number = 100
 ): Promise<{ content: Array<{ type: string; text: string }> }> {
+  // Validate and sanitize pattern to prevent ReDoS attacks (außerhalb try-catch)
+  const sanitizedPattern = sanitizeSearchPattern(pattern);
+  
   try {
-    // Validate and sanitize pattern to prevent ReDoS attacks
-    const sanitizedPattern = sanitizeSearchPattern(pattern);
-
     const { stdout } = await execa("journalctl", [
       "-n",
       String(lines * 10), // Mehr Zeilen durchsuchen
@@ -204,8 +208,9 @@ async function searchLogs(
     // Fallback: grep in /var/log/syslog
     if (existsSync("/var/log/syslog")) {
       try {
-        const { stdout } = await execa("grep", [pattern, "/var/log/syslog"], {
+        const { stdout } = await execa("grep", [sanitizedPattern, "/var/log/syslog"], {
           reject: false,
+          timeout: 10000, // 10 Sekunden
         });
         
         const matchedLines = stdout.split("\n").filter(l => l.trim()).slice(-lines);
@@ -247,7 +252,9 @@ async function tailLogs(
       throw new Error(`Log-Datei nicht gefunden: ${path}`);
     }
 
-    const { stdout } = await execa("tail", ["-n", String(lines), sanitizedPath]);
+    const { stdout } = await execa("tail", ["-n", String(lines), sanitizedPath], {
+      timeout: 10000, // 10 Sekunden
+    });
     
     let output = `[FILE] Log File: ${path}\n\n`;
     output += `Letzte ${lines} Zeilen:\n\n`;
@@ -277,7 +284,9 @@ async function analyzeErrors(
       "-p",
       "err",
       "--no-pager",
-    ]);
+    ], {
+      timeout: 15000, // 15 Sekunden
+    });
     
     const lines = stdout.split("\n").filter(l => l.trim());
     

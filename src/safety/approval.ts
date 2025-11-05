@@ -47,6 +47,14 @@ const DESTRUCTIVE_COMMANDS = [
   "ufw",
   "mv /",
   "cp /",
+  "docker restart",
+  "docker stop",
+  "docker kill",
+  "docker rm",
+  "docker rmi",
+  "docker system prune",
+  "docker volume rm",
+  "docker network rm",
 ];
 
 /**

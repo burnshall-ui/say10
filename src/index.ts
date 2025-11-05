@@ -27,6 +27,10 @@ import { getMonitoringTools, handleMonitoringTool } from "./tools/monitoring.js"
 import { getLogTools, handleLogTool } from "./tools/logs.js";
 import { getServiceTools, handleServiceTool } from "./tools/services.js";
 import { getNetworkTools, handleNetworkTool } from "./tools/network.js";
+import { getDockerTools, handleDockerTool } from "./tools/docker.js";
+import { getHistoryTools, handleHistoryTool } from "./tools/history.js";
+import { getAchievementTools, handleAchievementTool } from "./tools/achievements.js";
+import { getPythonTools, handlePythonTool } from "./tools/python.js";
 
 const logger = getLogger('mcp-server');
 
@@ -58,6 +62,10 @@ class AdminMCPServer {
       ...getLogTools(),
       ...getServiceTools(),
       ...getNetworkTools(),
+      ...getDockerTools(),
+      ...getHistoryTools(),
+      ...getAchievementTools(),
+      ...getPythonTools(),
     ];
 
     logger.info({ toolCount: this.tools.length }, 'MCP Server initialized');
@@ -79,8 +87,24 @@ class AdminMCPServer {
 
       try {
         // Route zu entsprechendem Tool Handler
-        // Check Network Tools first (bevor check_* pattern)
-        if (
+        // Check Docker Tools first
+        if (name.startsWith("docker_")) {
+          return await handleDockerTool(name, args || {});
+        }
+        // Check History Tools
+        else if (name.startsWith("history_") || name.startsWith("session_")) {
+          return await handleHistoryTool(name, args || {});
+        }
+        // Check Achievement Tools
+        else if (name.startsWith("achievements_")) {
+          return await handleAchievementTool(name, args || {});
+        }
+        // Check Python Tools
+        else if (name.startsWith("python_")) {
+          return await handlePythonTool(name, args || {});
+        }
+        // Check Network Tools (bevor check_* pattern)
+        else if (
           name === "check_ports" ||
           name === "check_connections" ||
           name === "network_traffic" ||

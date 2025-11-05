@@ -6,7 +6,7 @@
 
 import { Tool } from "@modelcontextprotocol/sdk/types.js";
 import { execa } from "execa";
-import { sanitizeHostname, sanitizeRecordType } from "../utils/validation.js";
+import { sanitizeHostnameOrIP, sanitizeRecordType } from "../utils/validation.js";
 
 /**
  * Gibt alle Network Tools zurück
@@ -171,7 +171,9 @@ async function checkPorts(
       args[0] = "-uln";
     }
 
-    const { stdout } = await execa("ss", args);
+    const { stdout } = await execa("ss", args, {
+      timeout: 5000, // 5 Sekunden
+    });
 
     let output = `[NET] Offene Ports\n\n`;
 
@@ -192,17 +194,41 @@ async function checkPorts(
 
     const ports: PortInfo[] = [];
 
+    const parseAddressPort = (addrPort: string): { address: string; port: string } => {
+      const trimmed = addrPort.trim();
+      if (!trimmed) {
+        return { address: "*", port: "*" };
+      }
+
+      const lastColon = trimmed.lastIndexOf(":");
+      if (lastColon === -1) {
+        return { address: trimmed, port: "*" };
+      }
+
+      const addressPart = trimmed.slice(0, lastColon) || "*";
+      const portPart = trimmed.slice(lastColon + 1) || "*";
+
+      const normalizedAddress = addressPart.startsWith("[") && addressPart.endsWith("]")
+        ? addressPart.slice(1, -1)
+        : addressPart;
+
+      return {
+        address: normalizedAddress,
+        port: portPart,
+      };
+    };
+
     for (const line of lines) {
       const parts = line.trim().split(/\s+/);
       if (parts.length >= 5) {
-        const [proto, _recv, _send, localAddrPort, remoteAddrPort, state] = parts;
-        const [localAddr, localPort] = localAddrPort.split(":");
+        const [proto, _recv, _send, localAddrPort, _remoteAddrPort, state] = parts;
+        const { address, port } = parseAddressPort(localAddrPort);
 
         ports.push({
           proto: proto,
           state: state || "LISTEN",
-          localAddr: localAddr || "*",
-          localPort: localPort || localAddrPort,
+          localAddr: address || "*",
+          localPort: port || localAddrPort,
         });
       }
     }
@@ -272,7 +298,9 @@ async function checkConnections(
   try {
     const args = ["-tun"];
 
-    const { stdout } = await execa("ss", args);
+    const { stdout } = await execa("ss", args, {
+      timeout: 5000, // 5 Sekunden
+    });
 
     let output = `[NET] Aktive Verbindungen\n\n`;
 
@@ -290,21 +318,49 @@ async function checkConnections(
       remoteAddr: string;
     }
 
+    const normalizeStateFilter = (value?: string): string | null => {
+      if (!value) return null;
+      const normalized = value.toLowerCase();
+      if (normalized === "all") return null;
+      return normalized;
+    };
+
+    const matchesFilter = (connState: string, filter: string | null): boolean => {
+      if (!filter) {
+        return true;
+      }
+
+      const stateMap: Record<string, string[]> = {
+        established: ["estab"],
+        listen: ["listen"],
+        listening: ["listen"],
+        time_wait: ["time-wait"],
+      };
+
+      const normalizedConn = connState.toLowerCase();
+      const aliases = stateMap[filter] ?? [filter];
+      return aliases.some(alias => normalizedConn === alias);
+    };
+
+    const filterState = normalizeStateFilter(state);
+
     const connections: Connection[] = [];
 
     for (const line of lines) {
       const parts = line.trim().split(/\s+/);
       if (parts.length >= 5) {
-        const [proto, _r, _s, local, remote, connState] = parts;
+        const proto = parts[0];
+        const connState = parts[1] || "";
+        const local = parts[4] || "";
+        const remote = parts[5] || "";
 
-        // Filter by state if specified
-        if (state && connState && !connState.toLowerCase().includes(state.toLowerCase())) {
+        if (!matchesFilter(connState, filterState)) {
           continue;
         }
 
         connections.push({
-          proto: proto,
-          state: connState || "ESTABLISHED",
+          proto,
+          state: connState || "ESTAB",
           localAddr: local,
           remoteAddr: remote,
         });
@@ -365,7 +421,9 @@ async function networkTraffic(
   iface?: string
 ): Promise<{ content: Array<{ type: string; text: string }> }> {
   try {
-    const { stdout } = await execa("ip", ["-s", "link"]);
+    const { stdout } = await execa("ip", ["-s", "link"], {
+      timeout: 5000, // 5 Sekunden
+    });
 
     let output = `[NET] Network Interface Statistics\n\n`;
 
@@ -493,10 +551,16 @@ async function dnsLookup(
   recordType: string = "A"
 ): Promise<{ content: Array<{ type: string; text: string }> }> {
   try {
-    const { stdout } = await execa("dig", ["+short", hostname, recordType]);
+    // Validierung
+    const sanitizedHostname = sanitizeHostnameOrIP(hostname);
+    const sanitizedRecordType = sanitizeRecordType(recordType);
+    
+    const { stdout } = await execa("dig", ["+short", sanitizedHostname, sanitizedRecordType], {
+      timeout: 10000, // 10 Sekunden
+    });
 
-    let output = `[DNS] Lookup: ${hostname}\n\n`;
-    output += `Record Type: ${recordType}\n\n`;
+    let output = `[DNS] Lookup: ${sanitizedHostname}\n\n`;
+    output += `Record Type: ${sanitizedRecordType}\n\n`;
 
     if (!stdout.trim()) {
       output += `[WARN] Keine DNS Records gefunden\n`;
@@ -539,9 +603,16 @@ async function pingHost(
   count: number = 4
 ): Promise<{ content: Array<{ type: string; text: string }> }> {
   try {
-    const { stdout } = await execa("ping", ["-c", String(count), host]);
+    // Validierung
+    const sanitizedHost = sanitizeHostnameOrIP(host);
+    // Count validieren (1-10 Pakete)
+    const safeCount = Math.min(Math.max(1, count), 10);
+    
+    const { stdout } = await execa("ping", ["-c", String(safeCount), sanitizedHost], {
+      timeout: 15000, // 15 Sekunden
+    });
 
-    let output = `[PING] Host: ${host}\n\n`;
+    let output = `[PING] Host: ${sanitizedHost}\n\n`;
 
     // Parse ping statistics
     const statsMatch = stdout.match(/(\d+) packets transmitted, (\d+) received, ([\d.]+)% packet loss, time (\d+)ms/);
@@ -613,6 +684,7 @@ async function checkFirewall(): Promise<{ content: Array<{ type: string; text: s
     try {
       const { stdout: ufwStatus } = await execa("sudo", ["ufw", "status", "verbose"], {
         reject: false,
+        timeout: 5000, // 5 Sekunden
       });
 
       if (ufwStatus.includes("Status: active")) {
@@ -631,6 +703,7 @@ async function checkFirewall(): Promise<{ content: Array<{ type: string; text: s
     try {
       const { stdout: iptables } = await execa("sudo", ["iptables", "-L", "-n", "-v"], {
         reject: false,
+        timeout: 5000, // 5 Sekunden
       });
 
       output += `[iptables] Rules:\n`;
@@ -673,13 +746,18 @@ async function traceroute(
   maxHops: number = 30
 ): Promise<{ content: Array<{ type: string; text: string }> }> {
   try {
+    // Validierung
+    const sanitizedHost = sanitizeHostnameOrIP(host);
+    // maxHops validieren (1-50 Hops)
+    const safeMaxHops = Math.min(Math.max(1, maxHops), 50);
+    
     // Use -m for max hops, -n for no DNS resolution (faster)
-    const { stdout } = await execa("traceroute", ["-m", String(maxHops), "-n", host], {
+    const { stdout } = await execa("traceroute", ["-m", String(safeMaxHops), "-n", sanitizedHost], {
       timeout: 60000, // 60 second timeout
     });
 
-    let output = `[TRACE] Traceroute zu ${host}\n\n`;
-    output += `Max Hops: ${maxHops}\n\n`;
+    let output = `[TRACE] Traceroute zu ${sanitizedHost}\n\n`;
+    output += `Max Hops: ${safeMaxHops}\n\n`;
 
     // Parse traceroute output
     const lines = stdout.split("\n").filter(l => l.trim());

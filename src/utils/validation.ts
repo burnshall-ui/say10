@@ -11,8 +11,8 @@ import { normalize, resolve } from 'path';
  * @throws {Error} if service name contains invalid characters
  */
 export function sanitizeServiceName(service: string): string {
-  // Nur alphanumerische Zeichen, Punkt, Minus, Unterstrich erlauben
-  if (!/^[a-zA-Z0-9._-]+$/.test(service)) {
+  // Nur alphanumerische Zeichen, Punkt, Minus, Unterstrich und @ erlauben
+  if (!/^[a-zA-Z0-9._@-]+$/.test(service)) {
     throw new Error(`Ungültiger Service-Name: ${service}`);
   }
 
@@ -199,4 +199,49 @@ export function truncateString(str: string, maxLength: number, ellipsis = '...')
   }
 
   return truncated + ellipsis;
+}
+
+/**
+ * Validates Docker container name or ID
+ * Prevents command injection in docker commands
+ * @throws {Error} if container name is invalid
+ */
+export function sanitizeContainerName(name: string): string {
+  if (!name || typeof name !== 'string') {
+    throw new Error('Container Name oder ID erforderlich');
+  }
+
+  // Docker container names: alphanumeric, underscore, dot, hyphen
+  // Docker IDs: hexadecimal (12 or 64 chars)
+  const nameRegex = /^[a-zA-Z0-9][a-zA-Z0-9_.-]*$/;
+  const idRegex = /^[a-f0-9]{12,64}$/;
+
+  if (!nameRegex.test(name) && !idRegex.test(name)) {
+    throw new Error(`Ungültiger Container Name oder ID: ${name}`);
+  }
+
+  // Max length check
+  if (name.length > 255) {
+    throw new Error('Container Name zu lang (max 255 Zeichen)');
+  }
+
+  return name;
+}
+
+/**
+ * Validates Docker command arguments
+ * Prevents command injection
+ * @throws {Error} if command contains invalid characters
+ */
+export function sanitizeDockerCommand(cmd: string): string {
+  if (!cmd || typeof cmd !== 'string') {
+    throw new Error('Docker Command erforderlich');
+  }
+
+  // Whitelist: nur sichere Characters
+  if (!/^[a-zA-Z0-9\s_.-]+$/.test(cmd)) {
+    throw new Error(`Unsichere Zeichen im Docker Command: ${cmd}`);
+  }
+
+  return cmd;
 }

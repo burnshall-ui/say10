@@ -187,7 +187,9 @@ async function checkCPU(topProcesses: number = 10): Promise<{ content: Array<{ t
     
     // Load Average via execa (auf Linux)
     try {
-      const { stdout } = await execa("uptime", []);
+      const { stdout } = await execa("uptime", [], {
+        timeout: 3000, // 3 Sekunden
+      });
       const loadMatch = stdout.match(/load average: ([\d.]+), ([\d.]+), ([\d.]+)/);
       if (loadMatch) {
         output += `Load Average:\n`;

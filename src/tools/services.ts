@@ -128,7 +128,9 @@ async function listServices(
       args.push(`--state=${state}`);
     }
     
-    const { stdout } = await execa("systemctl", args);
+    const { stdout } = await execa("systemctl", args, {
+      timeout: 10000, // 10 Sekunden
+    });
     
     const lines = stdout.split("\n").filter(l => l.trim());
     
@@ -234,6 +236,7 @@ async function serviceStatus(
     
     const { stdout, stderr, exitCode } = await execa("systemctl", ["status", serviceName], {
       reject: false,
+      timeout: 5000, // 5 Sekunden
     });
     
     let output = `[SVC] Service Status: ${service}\n\n`;
@@ -287,7 +290,9 @@ async function restartService(
 
     // WICHTIG: Dies sollte nur nach Approval ausgeführt werden!
     // Die Approval-Logik wird im CLI/Safety Layer implementiert
-    const { stdout, stderr } = await execa("sudo", ["systemctl", "restart", serviceName]);
+    const { stdout, stderr } = await execa("sudo", ["systemctl", "restart", serviceName], {
+      timeout: 30000, // 30 Sekunden (Restart kann länger dauern)
+    });
     
     let output = `[RESTART] Service Restart: ${service}\n\n`;
     output += `[OK] Service wurde erfolgreich neugestartet.\n\n`;
@@ -300,6 +305,7 @@ async function restartService(
     try {
       const { stdout: statusOut } = await execa("systemctl", ["is-active", serviceName], {
         reject: false,
+        timeout: 3000, // 3 Sekunden
       });
       
       if (statusOut.trim() === "active") {
@@ -339,7 +345,9 @@ async function enableService(
     const sanitized = sanitizeServiceName(service);
     const serviceName = sanitized.endsWith(".service") ? sanitized : `${sanitized}.service`;
     
-    const { stdout } = await execa("sudo", ["systemctl", "enable", serviceName]);
+    const { stdout } = await execa("sudo", ["systemctl", "enable", serviceName], {
+      timeout: 10000, // 10 Sekunden
+    });
     
     let output = `[SVC] Service Enable: ${service}\n\n`;
     output += `[OK] Service wurde für Autostart aktiviert.\n\n`;
@@ -382,7 +390,9 @@ async function checkServiceLogs(
       "-n",
       String(lines),
       "--no-pager",
-    ]);
+    ], {
+      timeout: 10000, // 10 Sekunden
+    });
     
     let output = `[LOG] Service Logs: ${service}\n\n`;
     output += `Letzte ${lines} Einträge:\n\n`;

@@ -11,6 +11,10 @@ import { setApprovalHandler } from "../src/safety/approval.js";
 import type { ApprovalRequest } from "../src/types.js";
 import inquirer from "inquirer";
 import { config } from "../src/config/index.js";
+import { getHistoryStorage } from "../src/history/storage.js";
+import type { ToolCallRecord } from "../src/history/types.js";
+import { getAchievementTracker } from "../src/achievements/tracker.js";
+import { getAchievementById } from "../src/achievements/definitions.js";
 
 /**
  * Zeige Performance Stats
@@ -188,6 +192,11 @@ export class OllamaWithMCP {
   private model: string;
   private bridge: OllamaMCPBridge;
   private conversationHistory: Array<{ role: string; content: string; tool_calls?: any }> = [];
+  private maxHistorySize = 50; // Max Anzahl Nachrichten in History
+  private historyStorage = getHistoryStorage();
+  private sessionActive = false;
+  private achievementTracker = getAchievementTracker();
+  private sessionStartTime = 0;
 
   constructor(
     baseUrl = config.ollama.url,
@@ -202,6 +211,17 @@ export class OllamaWithMCP {
    * Initialisiert die MCP Bridge
    */
   async initialize(): Promise<void> {
+    // Initialize History Storage
+    await this.historyStorage.initialize();
+    
+    // Initialize Achievement Tracker
+    await this.achievementTracker.initialize();
+    
+    // Start new session
+    this.historyStorage.startSession();
+    this.sessionActive = true;
+    this.sessionStartTime = Date.now();
+    
     // Setup Approval Handler
     setApprovalHandler(async (request: ApprovalRequest) => {
       console.log("");
@@ -252,16 +272,29 @@ export class OllamaWithMCP {
         content: prompt,
       },
     ];
+    
+    // Record system prompt in history
+    if (this.sessionActive) {
+      this.historyStorage.addMessage("system", prompt);
+    }
   }
 
   /**
    * Chat mit Ollama (mit MCP Tool Support)
    */
   async chat(message: string): Promise<string> {
+    // Record user message
+    if (this.sessionActive) {
+      this.historyStorage.addMessage("user", message);
+    }
+    
     this.conversationHistory.push({
       role: "user",
       content: message,
     });
+    
+    // Memory Leak Fix: Trimme History automatisch
+    this.trimHistory();
 
     try {
       const tools = this.bridge.getToolsForOllama();
@@ -293,13 +326,68 @@ export class OllamaWithMCP {
 
         // Execute tool calls
         const toolResults: string[] = [];
+        const toolCallRecords: ToolCallRecord[] = [];
 
         for (const toolCall of data.message.tool_calls) {
-          const toolResult = await this.bridge.callTool(
-            toolCall.function.name,
-            toolCall.function.arguments
-          );
-          toolResults.push(toolResult);
+          const startTime = Date.now();
+          
+          try {
+            const toolResult = await this.bridge.callTool(
+              toolCall.function.name,
+              toolCall.function.arguments
+            );
+            toolResults.push(toolResult);
+            
+            const duration = Date.now() - startTime;
+            
+            // Record tool call in history
+            if (this.sessionActive) {
+              const record: ToolCallRecord = {
+                tool: toolCall.function.name,
+                args: toolCall.function.arguments,
+                result: toolResult,
+                success: !toolResult.startsWith("Error"),
+                timestamp: new Date(),
+                duration,
+              };
+              toolCallRecords.push(record);
+              this.historyStorage.addToolCall(
+                record.tool,
+                record.args,
+                record.result,
+                record.success,
+                record.duration
+              );
+              
+              // Track tool usage for achievements
+              const newAchievements = await this.achievementTracker.trackToolUsed(toolCall.function.name);
+              this.showNewAchievements(newAchievements);
+            }
+          } catch (error) {
+            const errorMsg = error instanceof Error ? error.message : String(error);
+            toolResults.push(`Error: ${errorMsg}`);
+            
+            const duration = Date.now() - startTime;
+            
+            if (this.sessionActive) {
+              const record: ToolCallRecord = {
+                tool: toolCall.function.name,
+                args: toolCall.function.arguments,
+                result: errorMsg,
+                success: false,
+                timestamp: new Date(),
+                duration,
+              };
+              toolCallRecords.push(record);
+              this.historyStorage.addToolCall(
+                record.tool,
+                record.args,
+                record.result,
+                record.success,
+                record.duration
+              );
+            }
+          }
         }
 
         // Add tool results to conversation and get final response
@@ -334,9 +422,17 @@ export class OllamaWithMCP {
           role: "assistant",
           content: finalMessage,
         });
+        
+        // Record assistant message in history
+        if (this.sessionActive) {
+          this.historyStorage.addMessage("assistant", finalMessage, toolCallRecords);
+        }
 
         // Zeige Performance Stats
         showPerformanceStats(finalData);
+        
+        // Trimme History nach Tool-Execution
+        this.trimHistory();
 
         return finalMessage;
       } else {
@@ -347,9 +443,17 @@ export class OllamaWithMCP {
           role: "assistant",
           content: assistantMessage,
         });
+        
+        // Record assistant message in history
+        if (this.sessionActive) {
+          this.historyStorage.addMessage("assistant", assistantMessage);
+        }
 
         // Zeige Performance Stats
         showPerformanceStats(data);
+        
+        // Trimme History
+        this.trimHistory();
 
         return assistantMessage;
       }
@@ -357,12 +461,88 @@ export class OllamaWithMCP {
       throw new Error(`Fehler bei Ollama Kommunikation: ${error}`);
     }
   }
+  
+  /**
+   * Trimmt die Conversation History auf maxHistorySize
+   * Behält immer das System Prompt
+   */
+  private trimHistory(): void {
+    const systemPrompt = this.conversationHistory.find((m) => m.role === "system");
+    
+    if (this.conversationHistory.length > this.maxHistorySize) {
+      const recentMessages = this.conversationHistory.slice(-this.maxHistorySize);
+      
+      // Stelle sicher, dass System Prompt erhalten bleibt
+      if (systemPrompt && recentMessages[0]?.role !== "system") {
+        this.conversationHistory = [systemPrompt, ...recentMessages];
+      } else {
+        this.conversationHistory = recentMessages;
+      }
+    }
+  }
 
   /**
    * Cleanup
    */
   async cleanup(): Promise<void> {
+    // End session and save
+    if (this.sessionActive) {
+      const duration = Math.floor((Date.now() - this.sessionStartTime) / 1000);
+      await this.historyStorage.endSession(false); // Default: not successful
+      
+      // Track session completion
+      const newAchievements = await this.achievementTracker.trackSessionCompleted(false, duration);
+      this.showNewAchievements(newAchievements);
+      
+      this.sessionActive = false;
+    }
+    
     await this.bridge.disconnect();
+  }
+  
+  /**
+   * End session successfully
+   */
+  async endSessionSuccessfully(): Promise<void> {
+    if (this.sessionActive) {
+      const duration = Math.floor((Date.now() - this.sessionStartTime) / 1000);
+      await this.historyStorage.endSession(true);
+      
+      // Track successful session
+      const newAchievements = await this.achievementTracker.trackSessionCompleted(true, duration);
+      this.showNewAchievements(newAchievements);
+      
+      this.sessionActive = false;
+    }
+  }
+  
+  /**
+   * Show newly unlocked achievements
+   */
+  private showNewAchievements(achievementIds: string[]): void {
+    if (achievementIds.length === 0) return;
+    
+    console.log("");
+    console.log(chalk.yellow.bold("  [!] ACHIEVEMENT UNLOCKED [!]"));
+    console.log("");
+    
+    for (const id of achievementIds) {
+      const achievement = getAchievementById(id);
+      if (!achievement) continue;
+      
+      console.log(chalk.yellow(`  ${achievement.icon} ${achievement.name} (+${achievement.points} pts)`));
+      console.log(chalk.gray(`     ${achievement.description}`));
+      console.log("");
+    }
+  }
+  
+  /**
+   * Update session metadata
+   */
+  updateSessionMetadata(metadata: { problem?: string; solution?: string }): void {
+    if (this.sessionActive) {
+      this.historyStorage.updateMetadata(metadata);
+    }
   }
 
   /**
