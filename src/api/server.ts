@@ -15,6 +15,8 @@ import { handleServiceTool } from "../tools/services.js";
 import { handleNetworkTool } from "../tools/network.js";
 import { handleDockerTool } from "../tools/docker.js";
 import { handleHistoryTool } from "../tools/history.js";
+import { handleAchievementTool } from "../tools/achievements.js";
+import { handlePythonTool } from "../tools/python.js";
 
 const logger = getLogger("api-server");
 
@@ -319,6 +321,75 @@ export class APIServer {
       }
     });
 
+    // Achievement Endpoints
+    this.fastify.get("/api/achievements/list", async () => {
+      try {
+        const result = await handleAchievementTool("achievements_list", {});
+        return this.successResponse({ achievements: result.content[0].text });
+      } catch (error) {
+        return this.errorResponse(error instanceof Error ? error.message : String(error));
+      }
+    });
+
+    this.fastify.get("/api/achievements/stats", async () => {
+      try {
+        const result = await handleAchievementTool("achievements_stats", {});
+        return this.successResponse({ stats: result.content[0].text });
+      } catch (error) {
+        return this.errorResponse(error instanceof Error ? error.message : String(error));
+      }
+    });
+
+    this.fastify.get("/api/achievements/progress", async () => {
+      try {
+        const result = await handleAchievementTool("achievements_progress", {});
+        return this.successResponse({ progress: result.content[0].text });
+      } catch (error) {
+        return this.errorResponse(error instanceof Error ? error.message : String(error));
+      }
+    });
+
+    // Python Tool Endpoints
+    this.fastify.post("/api/python/workspace/init", async (request) => {
+      try {
+        const { workspace, python } = request.body as { workspace?: string; python?: string };
+        const result = await handlePythonTool("python_init_workspace", { workspace, python });
+        return this.successResponse({ result: result.content[0].text });
+      } catch (error) {
+        return this.errorResponse(error instanceof Error ? error.message : String(error));
+      }
+    });
+
+    this.fastify.post("/api/python/script/create", async (request) => {
+      try {
+        const { name, content, workspace } = request.body as { name: string; content: string; workspace?: string };
+        const result = await handlePythonTool("python_create_script", { name, content, workspace });
+        return this.successResponse({ result: result.content[0].text });
+      } catch (error) {
+        return this.errorResponse(error instanceof Error ? error.message : String(error));
+      }
+    });
+
+    this.fastify.post("/api/python/script/run", async (request) => {
+      try {
+        const { name, args, workspace } = request.body as { name: string; args?: string[]; workspace?: string };
+        const result = await handlePythonTool("python_run_script", { name, args, workspace });
+        return this.successResponse({ result: result.content[0].text });
+      } catch (error) {
+        return this.errorResponse(error instanceof Error ? error.message : String(error));
+      }
+    });
+
+    this.fastify.post("/api/python/package/install", async (request) => {
+      try {
+        const { package: pkg, workspace } = request.body as { package: string; workspace?: string };
+        const result = await handlePythonTool("python_install_package", { package: pkg, workspace });
+        return this.successResponse({ result: result.content[0].text });
+      } catch (error) {
+        return this.errorResponse(error instanceof Error ? error.message : String(error));
+      }
+    });
+
     // API Info
     this.fastify.get("/api", async () => {
       return this.successResponse({
@@ -353,6 +424,17 @@ export class APIServer {
           },
           logs: {
             syslog: "GET /api/logs/syslog",
+          },
+          achievements: {
+            list: "GET /api/achievements/list",
+            stats: "GET /api/achievements/stats",
+            progress: "GET /api/achievements/progress",
+          },
+          python: {
+            workspace_init: "POST /api/python/workspace/init",
+            script_create: "POST /api/python/script/create",
+            script_run: "POST /api/python/script/run",
+            package_install: "POST /api/python/package/install",
           },
         },
       });
