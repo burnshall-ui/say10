@@ -86,7 +86,6 @@ async function chatMode(modelName?: string): Promise<void> {
 
       try {
         console.log("");
-        console.log(chalk.red.bold("  ◀ ") + chalk.red.bold("SAY10") + chalk.red(":"));
         const response = await ollama.chat(userInput);
         console.log(chalk.white("  " + response.split("\n").join("\n  ")));
         console.log("");
