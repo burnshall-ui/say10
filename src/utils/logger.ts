@@ -18,6 +18,8 @@ const isDevelopment = process.env.NODE_ENV !== 'production';
 
 /**
  * Logger Instanz
+ *
+ * Logs gehen nach stderr statt stdout, damit sie nicht die CLI stören
  */
 export const logger = pino({
   level: LOG_LEVEL,
@@ -28,6 +30,7 @@ export const logger = pino({
           colorize: true,
           translateTime: 'HH:MM:ss',
           ignore: 'pid,hostname',
+          destination: 2, // stderr statt stdout
         },
       }
     : undefined,

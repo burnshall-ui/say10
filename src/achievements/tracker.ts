@@ -59,7 +59,7 @@ export class AchievementTracker {
       // Create directory
       if (!existsSync(this.dataDir)) {
         await fs.mkdir(this.dataDir, { recursive: true });
-        logger.info({ dir: this.dataDir }, "Achievements directory created");
+        logger.debug({ dir: this.dataDir }, "Achievements directory created");
       }
 
       // Load existing data
@@ -362,7 +362,7 @@ export class AchievementTracker {
     this.unlockedAchievements.set(achievement.id, unlocked);
     await this.saveUnlockedAchievements();
 
-    logger.info({ achievementId: achievement.id, name: achievement.name }, "Achievement unlocked!");
+    logger.debug({ achievementId: achievement.id, name: achievement.name }, "Achievement unlocked!");
   }
 
   /**

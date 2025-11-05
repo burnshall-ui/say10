@@ -43,12 +43,12 @@ export class HistoryStorage {
       // Create directories if they don't exist
       if (!existsSync(this.historyDir)) {
         await fs.mkdir(this.historyDir, { recursive: true });
-        logger.info({ dir: this.historyDir }, "History directory created");
+        logger.debug({ dir: this.historyDir }, "History directory created");
       }
 
       if (!existsSync(this.sessionsDir)) {
         await fs.mkdir(this.sessionsDir, { recursive: true });
-        logger.info({ dir: this.sessionsDir }, "Sessions directory created");
+        logger.debug({ dir: this.sessionsDir }, "Sessions directory created");
       }
     } catch (error) {
       logger.error({ error }, "Failed to initialize history storage");
@@ -153,7 +153,7 @@ export class HistoryStorage {
     const sessionId = this.currentSession.sessionId;
     this.currentSession = null;
 
-    logger.info({ sessionId, success }, "Session ended and saved");
+    logger.debug({ sessionId, success }, "Session ended and saved");
     return sessionId;
   }
 
@@ -434,7 +434,7 @@ export class HistoryStorage {
       }
     }
 
-    logger.info({ deleted, daysToKeep }, "Old sessions cleaned up");
+    logger.debug({ deleted, daysToKeep }, "Old sessions cleaned up");
     return deleted;
   }
 
