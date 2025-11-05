@@ -73,7 +73,7 @@ export class HistoryStorage {
       },
     };
 
-    logger.info({ sessionId: id }, "New session started");
+    logger.debug({ sessionId: id }, "New session started");
     return this.currentSession;
   }
 

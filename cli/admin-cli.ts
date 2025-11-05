@@ -50,8 +50,6 @@ async function chatMode(modelName?: string): Promise<void> {
 
     ollama.setSystemPrompt(systemPrompt);
 
-    console.log(chalk.red.dim("  [") + chalk.red.bold("SYSTEM") + chalk.red.dim("]") + chalk.gray(" Session initialized"));
-    console.log("");
     console.log(chalk.red.dim("  " + "━".repeat(60)));
     console.log("");
 
